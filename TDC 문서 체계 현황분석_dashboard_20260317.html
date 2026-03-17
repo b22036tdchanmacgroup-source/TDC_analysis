@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TDC 문서관리 혁신 추진 전략 | 통합 대시보드</title>
+    <style>
+        :root {
+            --primary: #185FA5; --secondary: #0C447C; --accent: #E6F1FB;
+            --success: #0F6E56; --warn: #854F0B; --danger: #A32D2D;
+            --bg: #F3F6F9; --border: #D1D9E0; --card: #FFFFFF;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Pretendard', -apple-system, sans-serif; background: var(--bg); color: #333; line-height: 1.5; }
+        
+        /* Layout Header */
+        .header { background: #fff; padding: 2rem 3rem; border-bottom: 3px solid var(--primary); display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { font-size: 1.8rem; color: var(--secondary); font-weight: 800; }
+        .container { max-width: 1400px; margin: 2rem auto; padding: 0 1.5rem; }
+        
+        /* Dashboard Summary */
+        .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+        .s-card { background: #fff; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .s-card h4 { font-size: 0.85rem; color: #666; margin-bottom: 0.5rem; }
+        .s-card .val { font-size: 1.4rem; font-weight: 800; color: var(--primary); }
+
+        /* Navigation */
+        .tabs { display: flex; background: #fff; padding: 0.5rem; border-radius: 12px; margin-bottom: 1.5rem; border: 1px solid var(--border); }
+        .tab { flex: 1; padding: 1rem; text-align: center; cursor: pointer; border-radius: 8px; font-weight: 700; color: #666; transition: 0.3s; }
+        .tab.active { background: var(--primary); color: #fff; }
+
+        .section { display: none; animation: fadeIn 0.4s ease; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Section 1: Detailed Analysis Grid */
+        .analysis-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-bottom: 1.5rem; }
+        .team-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; position: relative; }
+        .team-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; margin-bottom: 10px; }
+        .b-stru { background: #E6F1FB; color: #0C447C; }
+        .b-way { background: #E1F5EE; color: #085041; }
+        .b-graph { background: #EEEDFE; color: #3C3489; }
+        
+        .attr-row { display: flex; font-size: 0.85rem; padding: 6px 0; border-bottom: 1px solid #f1f1f1; }
+        .attr-label { width: 70px; color: #888; flex-shrink: 0; }
+        .attr-val { font-weight: 600; color: #333; }
+        .tag { font-size: 10px; padding: 1px 5px; border-radius: 4px; margin-right: 3px; font-weight: 700; border: 1px solid #ddd; }
+        .t-warn { background: #FFF4E5; color: #663C00; border-color: #FAC775; }
+
+        .btn-detail { background: var(--accent); color: var(--secondary); border: 1px solid var(--primary); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 700; transition: 0.2s; margin-top: 12px; width: 100%; text-align: center; }
+        .btn-detail:hover { background: var(--primary); color: #fff; }
+
+        /* Section 2: Integrated Collaboration */
+        .sw-box { background: #fff; border: 2px solid var(--secondary); border-radius: 16px; overflow: hidden; }
+        .sw-title { background: var(--secondary); color: #fff; padding: 1.2rem; text-align: center; font-weight: 800; font-size: 1.2rem; }
+        .flow-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: #ddd; }
+        .flow-cell { background: #fff; padding: 1.5rem; min-height: 350px; }
+        .flow-cell h5 { color: var(--primary); font-size: 1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 5px; }
+        .role-pill { font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 800; margin-bottom: 10px; display: inline-block; }
+        .rp-eng { background: #E1F5EE; color: #085041; }
+        .rp-dev { background: #EEEDFE; color: #3C3489; }
+        .rp-adm { background: #FFF4E5; color: #663C00; }
+
+        /* Governance & Roadmap */
+        .gov-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 1.5rem; }
+        .gov-card { background: #fff; border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border); }
+        .rule-item { margin-bottom: 1.5rem; }
+        .level-tag { font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 800; }
+        .fixed { background: #FCEBEB; color: #A32D2D; }
+        .flexible { background: #EAF3DE; color: #27500A; }
+        .rm-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+        .rm-card { background: #fff; border-radius: 12px; border: 1px solid var(--border); overflow: hidden; }
+        .rm-head { padding: 1.2rem; border-bottom: 1px solid var(--border); }
+        .rm-phase { font-size: 11px; font-weight: 800; color: var(--primary); }
+        .rm-body { padding: 1.2rem; font-size: 0.9rem; }
+        .rm-list { list-style: none; padding-left: 0; }
+        .rm-list li { margin-bottom: 10px; padding-left: 15px; position: relative; }
+        .rm-list li::before { content: '→'; position: absolute; left: 0; color: var(--primary); font-weight: bold; }
+
+        /* Modal (Popup) System */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); overflow-y: auto; }
+        .modal-content { background: #fff; margin: 5% auto; padding: 2.5rem; width: 85%; max-width: 1000px; border-radius: 15px; position: relative; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .close { position: absolute; right: 25px; top: 20px; font-size: 30px; font-weight: bold; cursor: pointer; color: #aaa; }
+        .close:hover { color: #333; }
+        .modal-table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; font-size: 0.9rem; }
+        .modal-table th { background: #f8f9fa; padding: 12px; border: 1px solid var(--border); text-align: left; }
+        .modal-table td { padding: 12px; border: 1px solid var(--border); vertical-align: top; }
+        .modal-h3 { font-size: 1.25rem; color: var(--secondary); border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 15px; }
+
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>TDC 문서관리 혁신(PM) 추진 현황 보고</h1>
+    <div style="text-align: right;">
+        <p style="font-weight: 700; color: var(--primary);">Digital Asset Governance 2026</p>
+        <p style="font-size: 0.8rem; color: #999;">작성: 경영기획팀 (Part 1. TDC)</p>
+    </div>
+</div>
+
+<div class="container">
+    
+    <!-- Executive Summary Dashboard -->
+    <div class="summary-grid">
+        <div class="s-card"><h4>분석 대상</h4><div class="val">3개 핵심 팀 / 24개 탭</div></div>
+        <div class="s-card"><h4>사용자 페르소나</h4><div class="val">기획·개발·디자인·관리</div></div>
+        <div class="s-card"><h4>식별 리스크</h4><div class="val">데이터 파편화 및 사일로</div></div>
+        <div class="s-card"><h4>최종 목표</h4><div class="val">Digital Asset化</div></div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs">
+        <div class="tab active" onclick="showSection(0)">1. 현황 분석 및 진단</div>
+        <div class="tab" onclick="showSection(1)">2. 통합 재설계(안)</div>
+        <div class="tab" onclick="showSection(2)">3. 운영 거버넌스</div>
+        <div class="tab" onclick="showSection(3)">4. 단계별 이행 전략</div>
+    </div>
+
+    <!-- Section 1: Detailed Analysis & Diagnosis -->
+    <div id="sect0" class="section active">
+        <div class="analysis-grid">
+            <!-- Team 1: 구조물&STRANA -->
+            <div class="team-card">
+                <span class="team-badge b-stru">구조물 & STRANA (12개 탭)</span>
+                <div class="attr-row"><span class="attr-label">탭 성격</span><span class="attr-val">S/W별 9개 + Temp 3개</span></div>
+                <div class="attr-row"><span class="attr-label">카테고리</span><span class="attr-val">개발 흐름, 성과품, 참고자료 혼재</span></div>
+                <div class="attr-row"><span class="attr-label">특이사항</span><span class="attr-val"><span class="tag t-warn">Temp탭 상시화</span><span class="tag t-warn">성과레벨 불일치</span></span></div>
+                <button class="btn-detail" onclick="openModal('modal-team1')">상세 분석 데이터 보기</button>
+            </div>
+            <!-- Team 2: Way Solution -->
+            <div class="team-card">
+                <span class="team-badge b-way">Way Solution (7개 탭)</span>
+                <div class="attr-row"><span class="attr-label">탭 성격</span><span class="attr-val">S/W 탭 3개 + 부서/성과 4개</span></div>
+                <div class="attr-row"><span class="attr-label">카테고리</span><span class="attr-val">공종별 알고리즘 / 기획문서 혼재</span></div>
+                <div class="attr-row"><span class="attr-label">특이사항</span><span class="attr-val"><span class="tag t-warn">부서운영탭 혼재</span><span class="tag t-warn">외부자료 방치</span></span></div>
+                <button class="btn-detail" onclick="openModal('modal-team2')">상세 분석 데이터 보기</button>
+            </div>
+            <!-- Team 3: 그래픽스 개발 -->
+            <div class="team-card">
+                <span class="team-badge b-graph">그래픽스 개발 (5개 탭)</span>
+                <div class="attr-row"><span class="attr-label">탭 성격</span><span class="attr-val">엔진 2개 + 현장 1개 + 팀운영 1개</span></div>
+                <div class="attr-row"><span class="attr-label">카테고리</span><span class="attr-val">셀 단위 분리 (엔진/솔루션/현장)</span></div>
+                <div class="attr-row"><span class="attr-label">특이사항</span><span class="attr-val"><span class="tag t-warn">버전표기 누락</span><span class="tag t-warn">팀운영 혼재</span></span></div>
+                <button class="btn-detail" onclick="openModal('modal-team3')">상세 분석 데이터 보기</button>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-top: 1.5rem;">
+            <div class="gov-card" style="background: #f8f9fa;">
+                <h5 style="margin-bottom: 12px; font-weight: 800; color: var(--secondary);">직군별 페르소나 및 요구사항</h5>
+                <p style="font-size: 0.85rem; color: #666; line-height: 1.6;">
+                    엔지니어는 '사양 이력 추적'을, 개발자는 '최신 사양 접근성'을 원하고 있습니다. 각 직군의 Pain Point를 분석한 결과를 확인하십시오.
+                </p>
+                <button class="btn-detail" onclick="openModal('modal-persona')">요구사항 분석 결과 보기</button>
+            </div>
+            <div class="gov-card" style="background: #f8f9fa;">
+                <h5 style="margin-bottom: 12px; font-weight: 800; color: var(--success);">실무 인터뷰 및 혁신 아이디어</h5>
+                <p style="font-size: 0.85rem; color: #666; line-height: 1.6;">
+                    천지인팀 등 현업 부서의 실제 목소리와 TDC 문서 체계를 지능화하기 위한 혁신 제안(자동 구조화, M/H 연동 등)입니다.
+                </p>
+                <button class="btn-detail" onclick="openModal('modal-idea')">인터뷰 및 혁신 제안 보기</button>
+            </div>
+        </div>
+
+        <!-- Common Issues -->
+        <div style="background: #fff; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border); margin-top: 1.5rem;">
+            <h5 style="margin-bottom: 1rem; color: var(--danger); font-weight: 800;">[공통 진단] 3팀 모두에서 반복되는 구조적 이슈</h5>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; font-size: 0.85rem;">
+                <div style="background:#fdf2f2; padding:1rem; border-radius:8px;"><strong>팀 운영 문서 혼재</strong><br>세미나, 회의, 행정 문서가 S/W 개발 탭과 수평 배치되어 집중도 저하</div>
+                <div style="background:#fdf2f2; padding:1rem; border-radius:8px;"><strong>Naming 규칙 분열</strong><br>3팀 합산 15종 이상의 명명 패턴 혼재로 인해 데이터 검색 및 관리 불능</div>
+                <div style="background:#fdf2f2; padding:1rem; border-radius:8px;"><strong>카테고리 기준 부재</strong><br>공종별/기능별/단계별 기준이 섞여 있어 신규 인원 적응 및 인수인계 장애</div>
+                <div style="background:#fdf2f2; padding:1rem; border-radius:8px;"><strong>협업 워크플로우 단절</strong><br>기획-디자인-개발-검증 단계가 폴더 구조상에서 논리적으로 연결되지 않음</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 2: Integrated Collaboration Redesign -->
+    <div id="sect1" class="section">
+        <div class="sw-box">
+            <div class="sw-title">LEVEL 1: [ERP 프로젝트 코드] S/W 솔루션 자산 컨테이너</div>
+            <div class="flow-grid">
+                <div class="flow-cell">
+                    <h5>A. 기획 & 관리</h5>
+                    <span class="role-pill rp-eng">엔지니어</span><span class="role-pill rp-adm">관리자</span>
+                    <ul class="rm-list" style="font-size: 0.8rem; color: #666;">
+                        <li>기능 정의서 [SPEC]</li>
+                        <li>요구사항 목록 [REQ]</li>
+                        <li>사업 추진 계획 [PLAN]</li>
+                        <li>회의록 [MIN]</li>
+                    </ul>
+                </div>
+                <div class="flow-cell" style="background:#f9f9f9;">
+                    <h5>B. 설계 & 로직</h5>
+                    <span class="role-pill rp-eng">엔지니어</span>
+                    <ul class="rm-list" style="font-size: 0.8rem; color: #666;">
+                        <li>알고리즘 상세 설계</li>
+                        <li>계산 흐름도 & 입출력 정의</li>
+                        <li>엔지니어링 표준 기준문서</li>
+                    </ul>
+                </div>
+                <div class="flow-cell">
+                    <h5>C. 디자인 자산</h5>
+                    <span class="role-pill rp-dev">디자이너</span>
+                    <ul class="rm-list" style="font-size: 0.8rem; color: #666;">
+                        <li>Figma 원본/Deep Link</li>
+                        <li>화면 설계서 [UI]</li>
+                        <li>UI 컴포넌트 & 그래픽 에셋</li>
+                    </ul>
+                </div>
+                <div class="flow-cell" style="background:#f9f9f9;">
+                    <h5>D. 개발 & 구현</h5>
+                    <span class="role-pill rp-dev">개발자</span>
+                    <ul class="rm-list" style="font-size: 0.8rem; color: #666;">
+                        <li>API 명세서 [API]</li>
+                        <li>DB 설계서 & 아키텍처</li>
+                        <li>기술 결정 기록 [ADR]</li>
+                    </ul>
+                </div>
+                <div class="flow-cell">
+                    <h5>E. 검증 & 운영</h5>
+                    <span class="role-pill rp-eng">엔지니어</span><span class="role-pill rp-adm">관리자</span>
+                    <ul class="rm-list" style="font-size: 0.8rem; color: #666;">
+                        <li>정확도 검증 보고서</li>
+                        <li>테스트 케이스 결과 [TEST]</li>
+                        <li>릴리즈 노트 [REL]</li>
+                        <li>사용자 매뉴얼 [GUIDE]</li>
+                    </ul>
+                </div>
+            </div>
+            <div style="background: var(--accent); padding: 1rem; text-align: center; font-weight: 700; border-top: 2px solid var(--secondary);">
+                Z. 작업장 (WIP): 전 역할 실시간 협업 공간 → 승인 완료 시 A~E 공식 폴더 이동 (PC 문서 저장 ZERO 실현)
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 3: Governance Policy -->
+    <div id="sect2" class="section">
+        <div class="gov-grid">
+            <div class="gov-card">
+                <h5 style="margin-bottom:1.2rem; font-weight: 800;">계층별 관리 원칙</h5>
+                <div class="rule-item">
+                    <h6><span class="level-tag fixed">LEVEL 1~2</span> 탭 & 카테고리 [고정]</h6>
+                    <p style="font-size: 0.85rem; color: #666; margin-top: 6px;">전사 표준 SDLC(A~E, Z) 체계를 시스템 관리자가 강제로 배포합니다. 임의 삭제 및 명칭 변경이 불가하며 검색 효율성을 보장합니다.</p>
+                </div>
+                <div class="rule-item">
+                    <h6><span class="level-tag flexible">LEVEL 3~</span> 서브 카테고리 [유연]</h6>
+                    <p style="font-size: 0.85rem; color: #666; margin-top: 6px;">솔루션 특성(교량별, 공종별 등)에 따라 부서 자율로 하위 폴더를 구성할 수 있습니다. 단, 최상위 표준 원칙은 준수해야 합니다.</p>
+                </div>
+            </div>
+            <div class="gov-card">
+                <h5 style="margin-bottom:1.2rem; font-weight: 800;">Naming 규칙 (Activity 코드 별도 관리)</h5>
+                <div style="background: var(--bg); padding: 1.2rem; border-radius: 8px; font-family: monospace; text-align: center; margin-bottom: 1rem; border: 1px dashed var(--primary);">
+                    [유형태그] _ YYYY-MM-DD _ 파일명 _ v버전
+                </div>
+                <ul class="rm-list" style="font-size: 0.85rem; color: #666;">
+                    <li><strong>Activity 코드:</strong> 파일 저장 시 시스템 팝업에서 선택 (파일명 제외로 가독성 확보)</li>
+                    <li><strong>유형 태그:</strong> [SPEC], [UI], [API], [PLAN], [MIN], [REPORT] 등 공통 코드 사용</li>
+                    <li><strong>버전 관리:</strong> 핵심 사양서 및 엔진 라이브러리는 v1.0 형식 표기 의무화</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 4: Roadmap -->
+    <div id="sect3" class="section">
+        <div class="rm-grid">
+            <!-- Phase 1 -->
+            <div class="rm-card">
+                <div class="rm-head" style="background:#f8f9ff;">
+                    <span class="rm-phase">Phase 1. 구조 정비 (1~2주)</span>
+                    <h5 style="margin-top:5px; font-weight: 800;">탭 목적 분리 및 임시 탭 동결</h5>
+                </div>
+                <div class="rm-body">
+                    <ul class="rm-list">
+                        <li><strong>섹션 A/B 분리:</strong> 기술 자산과 팀 행정 문서의 물리적 분리 선언</li>
+                        <li><strong>팀 운영 탭 이동:</strong> 세미나, 회의록 탭을 섹션 B로 일괄 이동</li>
+                        <li><strong>임시 탭 등록 차단:</strong> 90/91/92번 탭 신규 등록 차단 및 이관 목록화</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Phase 2 -->
+            <div class="rm-card">
+                <div class="rm-head" style="background:#f8fff8;">
+                    <span class="rm-phase">Phase 2. 표준 적용 (1~2개월)</span>
+                    <h5 style="margin-top:5px; font-weight: 800;">S/W별 내부 정비 및 집중 이관</h5>
+                </div>
+                <div class="rm-body">
+                    <ul class="rm-list">
+                        <li><strong>표준 SDLC 폴더 생성:</strong> S/W 탭 내 A~E, Z 폴더 일괄 자동 생성</li>
+                        <li><strong>핵심 프로젝트 이관:</strong> 10개 주력 솔루션 최신 데이터를 신규 체계로 이동</li>
+                        <li><strong>Naming 리네이밍:</strong> 이관 대상 주요 문서에 표준 명명 규칙 적용</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Phase 3 -->
+            <div class="rm-card">
+                <div class="rm-head" style="background:#fffaf0;">
+                    <span class="rm-phase">Phase 3. 고도화 (3~6개월)</span>
+                    <h5 style="margin-top:5px; font-weight: 800;">전사 통합 운영 및 지능화</h5>
+                </div>
+                <div class="rm-body">
+                    <ul class="rm-list">
+                        <li><strong>참조 라이브러리 통합:</strong> 엔진(HmDraw 등) 문서 Single Source화</li>
+                        <li><strong>Activity 연동:</strong> 인트라넷 코드 선택 UI 구현 및 M/H 자동 정합성 검증</li>
+                        <li><strong>지속적 모니터링:</strong> PC 저장 Zero 실태 점검 및 기술 자산 활용 대시보드</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- MODALS (Data from File 2 integrated) -->
+<!-- Team 1 Analysis Modal -->
+<div id="modal-team1" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('modal-team1')">&times;</span>
+        <h3 class="modal-h3">구조물 & STRANA팀 상세 분석 및 진단</h3>
+        <table class="modal-table">
+            <tr><th width="20%">구성 현황</th><td>12개 탭 (9개 S/W 탭 + 3개 임시/아카이브 탭)</td></tr>
+            <tr><th>주요 문제</th><td>S/W 개발 흐름(기획/설계/구현)과 최종 성과품(도면/수량)이 뒤섞여 히스토리 추적 불가</td></tr>
+            <tr><th>특이사항</th><td>90/91/92번 'Temp' 탭에 500개 이상의 문서가 방치되어 있으며, 성과물 레벨이 부서마다 상이함</td></tr>
+            <tr><th>이관 방향</th><td>'BridgePlanner' 등 개별 S/W 컨테이너를 표준화하고, 과거 현장 성과품은 공통 아카이브로 격리 이관</td></tr>
+        </table>
+    </div>
+</div>
+
+<!-- Team 2 Analysis Modal -->
+<div id="modal-team2" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('modal-team2')">&times;</span>
+        <h3 class="modal-h3">Way Solution팀 상세 분석 및 진단</h3>
+        <table class="modal-table">
+            <tr><th width="20%">구성 현황</th><td>7개 탭 (S/W 탭 3개 + 부서/성과/임시 4개)</td></tr>
+            <tr><th>주요 문제</th><td>공간정보 및 부서업무 탭이 메인 S/W 솔루션 제품군과 동일 선상에 위치하여 기술 자산 집중도 저하</td></tr>
+            <tr><th>특이사항</th><td>99.외부자료 폴더가 단순 보관소로 전락하여 정기적인 업데이트 및 관리 체계가 부재함</td></tr>
+            <tr><th>이관 방향</th><td>팀 운영 행정 문서를 섹션 B로 완벽 분리하고, 공종별 기획 문서를 표준 B카테고리로 통합 설계</td></tr>
+        </table>
+    </div>
+</div>
+
+<!-- Team 3 Analysis Modal -->
+<div id="modal-team3" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('modal-team3')">&times;</span>
+        <h3 class="modal-h3">그래픽스 개발팀 상세 분석 및 진단</h3>
+        <table class="modal-table">
+            <tr><th width="20%">구성 현황</th><td>5개 탭 (엔진 2개 + 현장성과 1개 + 기능개발 1개 + 팀운영 1개)</td></tr>
+            <tr><th>주요 문제</th><td>엔진 및 기능 개발 과정에서 버전 표기(v1.0 등)가 누락되어 최신본 확인 및 협업 시 혼선 발생</td></tr>
+            <tr><th>특이사항</th><td>셀 단위로 폴더가 분리되어 있으나 셀 간 공통 기술(HmEG 등)에 대한 참조 경로가 단절되어 있음</td></tr>
+            <tr><th>이관 방향</th><td>엔진 버전 관리 가이드라인을 강제 적용하고, 전사 공통 참조 라이브러리 탭을 통해 기술 공유화 추진</td></tr>
+        </table>
+    </div>
+</div>
+
+<!-- Persona Analysis Modal -->
+<div id="modal-persona" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('modal-persona')">&times;</span>
+        <h3 class="modal-h3">사용자 페르소나별 요구사항 및 진단</h3>
+        <table class="modal-table">
+            <thead>
+                <tr><th width="20%">직군</th><th>개발 단계(SDLC) 요구사항</th><th>완료 후 관리 단계 요구사항</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="font-weight: 700;">엔지니어 (기획)</td>
+                    <td>사양 문서 버전 관리, 유사 사례 검색, 사양 변경 이력 추적</td>
+                    <td>현장 적용 성과 축적, 피드백 수집, 차기 버전 기능 도출</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: 700;">개발자 / 디자인</td>
+                    <td>최신 사양서 상시 접근, 엔진 API 레퍼런스 가시성, 이전 구현 이력</td>
+                    <td>운영 환경 설정 최신화, 장애 대응 절차 체계화, 백로그 문서화</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: 700;">부서 관리자</td>
+                    <td>전체 S/W 진도 점검, 협업 단계별 문서 접근성, 병목 지점 파악</td>
+                    <td>S/W 성과 지표 점검, 유지보수 비용/이슈 통합, 납품 이력 관리</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Interview & Innovation Modal -->
+<div id="modal-idea" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('modal-idea')">&times;</span>
+        <h3 class="modal-h3">실무 인터뷰 및 시스템 혁신 제안 (Idea)</h3>
+        <div style="margin-bottom: 20px;">
+            <p style="font-weight: 800; color: var(--primary); margin-bottom: 8px;">[미니 인터뷰] 천지인팀 현장 목소리</p>
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-size: 0.9rem; line-height: 1.6;">
+                "구글 드라이브와 PM의 이중 관리 체계로 인한 피로도가 매우 높습니다. PM에서 <strong>실시간 문서 편집</strong>과 
+                <strong>고정 주소 링크(Deep Link)</strong> 기능이 지원된다면 PM 단일 체계로 완전 전환이 가능할 것으로 보입니다."
+            </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div style="border: 1px solid var(--border); padding: 15px; border-radius: 8px;">
+                <p style="font-weight: 700; margin-bottom: 10px;">협업 지능화 제안</p>
+                <ul class="rm-list" style="font-size: 0.85rem; color: #666;">
+                    <li>파일명 입력 시 자동 개조식 및 구조화 UI 제공</li>
+                    <li>직군별 목표 도달 최단 경로 메뉴(Shortcut) 렌더링</li>
+                    <li>사용자 요구에 따른 스마트 정렬/필터링 기능</li>
+                </ul>
+            </div>
+            <div style="border: 1px solid var(--border); padding: 15px; border-radius: 8px;">
+                <p style="font-weight: 700; margin-bottom: 10px;">관리 효율화 제안</p>
+                <ul class="rm-list" style="font-size: 0.85rem; color: #666;">
+                    <li>Activity 코드를 통한 M/H 및 실적 자동 정합성 체크</li>
+                    <li>섹션 분류를 통한 기술 자산과 행정 문서의 논리적 격리</li>
+                    <li>폴더별 주 담당자(Owner) 지정을 통한 책임 관리제</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Tab switching logic
+    function showSection(idx) {
+        document.querySelectorAll('.section').forEach((s, i) => {
+            s.classList.toggle('active', i === idx);
+        });
+        document.querySelectorAll('.tab').forEach((t, i) => {
+            t.classList.toggle('active', i === idx);
+        });
+    }
+
+    // Modal logic
+    function openModal(id) {
+        document.getElementById(id).style.display = "block";
+        document.body.style.overflow = "hidden"; // Prevent background scroll
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).style.display = "none";
+        document.body.style.overflow = "auto";
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        if (event.target.className === 'modal') {
+            event.target.style.display = "none";
+            document.body.style.overflow = "auto";
+        }
+    }
+</script>
+
+</body>
+</html>
