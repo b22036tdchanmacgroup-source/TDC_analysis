@@ -1,454 +1,1894 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TDC 문서관리 혁신 추진 전략 | 통합 대시보드</title>
-    <style>
-        :root {
-            --primary: #185FA5; --secondary: #0C447C; --accent: #E6F1FB;
-            --success: #0F6E56; --warn: #854F0B; --danger: #A32D2D;
-            --bg: #F3F6F9; --border: #D1D9E0; --card: #FFFFFF;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Pretendard', -apple-system, sans-serif; background: var(--bg); color: #333; line-height: 1.5; }
-        
-        /* Layout Header */
-        .header { background: #fff; padding: 2rem 3rem; border-bottom: 3px solid var(--primary); display: flex; justify-content: space-between; align-items: center; }
-        .header h1 { font-size: 1.8rem; color: var(--secondary); font-weight: 800; }
-        .container { max-width: 1400px; margin: 2rem auto; padding: 0 1.5rem; }
-        
-        /* Dashboard Summary */
-        .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
-        .s-card { background: #fff; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .s-card h4 { font-size: 0.85rem; color: #666; margin-bottom: 0.5rem; }
-        .s-card .val { font-size: 1.4rem; font-weight: 800; color: var(--primary); }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TDC 문서관리 체계 재정비 대시보드</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
-        /* Navigation */
-        .tabs { display: flex; background: #fff; padding: 0.5rem; border-radius: 12px; margin-bottom: 1.5rem; border: 1px solid var(--border); }
-        .tab { flex: 1; padding: 1rem; text-align: center; cursor: pointer; border-radius: 8px; font-weight: 700; color: #666; transition: 0.3s; }
-        .tab.active { background: var(--primary); color: #fff; }
+  :root {
+    --bg: #F5F3EE;
+    --surface: #FFFFFF;
+    --surface2: #F0EDE6;
+    --border: rgba(0,0,0,0.08);
+    --border2: rgba(0,0,0,0.14);
+    --text: #1A1916;
+    --text2: #6B6860;
+    --text3: #9E9B93;
+    --accent: #2B4C8C;
+    --accent-light: #E8EEF8;
+    --amber: #B86A00;
+    --amber-light: #FFF3DC;
+    --red: #A33030;
+    --red-light: #FDEAEA;
+    --green: #2A6B3A;
+    --green-light: #E6F4EB;
+    --teal: #1A6B66;
+    --teal-light: #E4F4F3;
+    --purple: #5B3A8C;
+    --purple-light: #EFE9F8;
+    --coral: #C24A2A;
+    --coral-light: #FAEAE4;
+  }
 
-        .section { display: none; animation: fadeIn 0.4s ease; }
-        .section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* Section 1: Detailed Analysis Grid */
-        .analysis-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-bottom: 1.5rem; }
-        .team-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; position: relative; }
-        .team-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; margin-bottom: 10px; }
-        .b-stru { background: #E6F1FB; color: #0C447C; }
-        .b-way { background: #E1F5EE; color: #085041; }
-        .b-graph { background: #EEEDFE; color: #3C3489; }
-        
-        .attr-row { display: flex; font-size: 0.85rem; padding: 6px 0; border-bottom: 1px solid #f1f1f1; }
-        .attr-label { width: 70px; color: #888; flex-shrink: 0; }
-        .attr-val { font-weight: 600; color: #333; }
-        .tag { font-size: 10px; padding: 1px 5px; border-radius: 4px; margin-right: 3px; font-weight: 700; border: 1px solid #ddd; }
-        .t-warn { background: #FFF4E5; color: #663C00; border-color: #FAC775; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.6;
+  }
 
-        .btn-detail { background: var(--accent); color: var(--secondary); border: 1px solid var(--primary); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 700; transition: 0.2s; margin-top: 12px; width: 100%; text-align: center; }
-        .btn-detail:hover { background: var(--primary); color: #fff; }
+  /* ── Header ── */
+  .header {
+    background: var(--accent);
+    color: #fff;
+    padding: 28px 40px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  .header .sub { font-size: 12px; opacity: 0.65; margin-top: 4px; }
+  .header .date { font-family: 'IBM Plex Mono', monospace; font-size: 11px; opacity: 0.5; }
 
-        /* Section 2: Integrated Collaboration */
-        .sw-box { background: #fff; border: 2px solid var(--secondary); border-radius: 16px; overflow: hidden; }
-        .sw-title { background: var(--secondary); color: #fff; padding: 1.2rem; text-align: center; font-weight: 800; font-size: 1.2rem; }
-        .flow-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: #ddd; }
-        .flow-cell { background: #fff; padding: 1.5rem; min-height: 350px; }
-        .flow-cell h5 { color: var(--primary); font-size: 1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 5px; }
-        .role-pill { font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 800; margin-bottom: 10px; display: inline-block; }
-        .rp-eng { background: #E1F5EE; color: #085041; }
-        .rp-dev { background: #EEEDFE; color: #3C3489; }
-        .rp-adm { background: #FFF4E5; color: #663C00; }
+  /* ── Nav tabs ── */
+  .nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border2);
+    padding: 0 40px;
+    display: flex;
+    gap: 0;
+  }
+  .nav-tab {
+    padding: 14px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    color: var(--text2);
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .nav-tab:hover:not(.active) { color: var(--text); background: var(--surface2); }
 
-        /* Governance & Roadmap */
-        .gov-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 1.5rem; }
-        .gov-card { background: #fff; border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border); }
-        .rule-item { margin-bottom: 1.5rem; }
-        .level-tag { font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 800; }
-        .fixed { background: #FCEBEB; color: #A32D2D; }
-        .flexible { background: #EAF3DE; color: #27500A; }
-        .rm-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
-        .rm-card { background: #fff; border-radius: 12px; border: 1px solid var(--border); overflow: hidden; }
-        .rm-head { padding: 1.2rem; border-bottom: 1px solid var(--border); }
-        .rm-phase { font-size: 11px; font-weight: 800; color: var(--primary); }
-        .rm-body { padding: 1.2rem; font-size: 0.9rem; }
-        .rm-list { list-style: none; padding-left: 0; }
-        .rm-list li { margin-bottom: 10px; padding-left: 15px; position: relative; }
-        .rm-list li::before { content: '→'; position: absolute; left: 0; color: var(--primary); font-weight: bold; }
+  /* ── Layout ── */
+  .main { padding: 28px 40px; max-width: 1400px; }
+  .section { display: none; }
+  .section.active { display: block; }
 
-        /* Modal (Popup) System */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); overflow-y: auto; }
-        .modal-content { background: #fff; margin: 5% auto; padding: 2.5rem; width: 85%; max-width: 1000px; border-radius: 15px; position: relative; animation: slideUp 0.3s ease; }
-        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .close { position: absolute; right: 25px; top: 20px; font-size: 30px; font-weight: bold; cursor: pointer; color: #aaa; }
-        .close:hover { color: #333; }
-        .modal-table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; font-size: 0.9rem; }
-        .modal-table th { background: #f8f9fa; padding: 12px; border: 1px solid var(--border); text-align: left; }
-        .modal-table td { padding: 12px; border: 1px solid var(--border); vertical-align: top; }
-        .modal-h3 { font-size: 1.25rem; color: var(--secondary); border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 15px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 
-    </style>
+  /* ── Cards ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .card-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 14px;
+  }
+
+  /* ── Metric cards ── */
+  .metric-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+  }
+  .metric-label { font-size: 11px; color: var(--text3); margin-bottom: 6px; }
+  .metric-value { font-size: 26px; font-weight: 700; color: var(--text); font-family: 'IBM Plex Mono', monospace; }
+  .metric-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
+
+  /* ── Issue cards ── */
+  .issue-item {
+    display: flex;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .issue-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .issue-num {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .issue-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+  .issue-desc { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
+  /* ── Severity badges ── */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+  .badge-high { background: var(--red-light); color: var(--red); }
+  .badge-mid  { background: var(--amber-light); color: var(--amber); }
+  .badge-low  { background: var(--green-light); color: var(--green); }
+  .badge-info { background: var(--accent-light); color: var(--accent); }
+
+  /* ── Flow steps ── */
+  .flow-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin-bottom: 16px;
+  }
+  .flow-step {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 12px;
+    text-align: center;
+    position: relative;
+  }
+  .flow-step .step-num {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text3);
+    margin-bottom: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .flow-step .step-title { font-size: 12px; font-weight: 500; }
+  .flow-step .step-sub { font-size: 11px; color: var(--text2); margin-top: 3px; }
+  .flow-arrow {
+    display: flex;
+    align-items: center;
+    padding: 0 6px;
+    color: var(--text3);
+    font-size: 16px;
+  }
+  .flow-step.highlight { background: var(--accent-light); border-color: var(--accent); }
+  .flow-step.highlight .step-title { color: var(--accent); }
+
+  /* ── Type cards ── */
+  .type-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .type-header {
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .type-body { padding: 12px 16px; }
+  .type-cat {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .type-cat:last-child { border-bottom: none; }
+  .type-cat-label { font-weight: 500; min-width: 20px; color: var(--text3); font-family: 'IBM Plex Mono', monospace; font-size: 11px; }
+  .type-cat-name { flex: 1; }
+  .type-cat-desc { font-size: 11px; color: var(--text3); }
+  .type-sw { font-size: 11px; color: var(--text2); margin-top: 8px; line-height: 1.6; }
+
+  /* ── Comparison table ── */
+  .comp-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .comp-table th {
+    background: var(--surface2);
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 11px;
+    border-bottom: 2px solid var(--border2);
+    color: var(--text2);
+  }
+  .comp-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .comp-table tr:last-child td { border-bottom: none; }
+  .comp-table .win { color: var(--green); font-weight: 500; }
+  .comp-table .lose { color: var(--red); }
+
+  /* ── User journey ── */
+  .persona-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .persona-card {
+    flex: 1;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .persona-header {
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .persona-body { padding: 14px 16px; }
+  .persona-point { font-size: 12px; margin-bottom: 8px; display: flex; gap: 8px; }
+  .persona-point .icon { flex-shrink: 0; margin-top: 1px; }
+
+  /* ── Guide section ── */
+  .guide-block {
+    border-left: 3px solid var(--accent);
+    padding: 14px 18px;
+    background: var(--accent-light);
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 14px;
+  }
+  .guide-block .gb-title { font-size: 13px; font-weight: 600; color: var(--accent); margin-bottom: 6px; }
+  .guide-block .gb-body { font-size: 12px; color: var(--text); line-height: 1.7; }
+  .guide-block.amber { border-color: var(--amber); background: var(--amber-light); }
+  .guide-block.amber .gb-title { color: var(--amber); }
+  .guide-block.green { border-color: var(--green); background: var(--green-light); }
+  .guide-block.green .gb-title { color: var(--green); }
+
+  /* ── SW List ── */
+  .sw-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px; }
+  .sw-chip {
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    text-align: center;
+    border: 1px solid transparent;
+  }
+
+  /* ── Section header ── */
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .section-header h2 { font-size: 16px; font-weight: 700; }
+  .section-header p { font-size: 12px; color: var(--text2); }
+
+  .divider { height: 1px; background: var(--border); margin: 24px 0; }
+
+  /* ── Progress bar ── */
+  .progress-bar { height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; margin-top: 8px; }
+  .progress-fill { height: 100%; border-radius: 3px; transition: width 0.6s; }
+
+  /* ── Checklist ── */
+  .checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .checklist-item:last-child { border-bottom: none; }
+  .check-box {
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--border2);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .check-box.checked { background: var(--accent); border-color: var(--accent); }
+  .check-box.checked::after { content: '✓'; color: white; font-size: 10px; font-weight: 700; }
+  .check-label { flex: 1; }
+  .check-label.done { text-decoration: line-through; color: var(--text3); }
+
+  .tag {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 600;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+</style>
 </head>
 <body>
 
 <div class="header">
-    <h1>TDC 문서관리 혁신(PM) 추진 현황 보고</h1>
-    <div style="text-align: right;">
-        <p style="font-weight: 700; color: var(--primary);">Digital Asset Governance 2026</p>
-        <p style="font-size: 0.8rem; color: #999;">작성: 경영기획팀 (Part 1. TDC)</p>
-    </div>
+  <div>
+    <div class="sub">TDC 문서관리시스템 재정비 프로젝트</div>
+    <h1>문서 분류 체계 분석 &amp; 개선 방향 대시보드</h1>
+  </div>
+  <div class="date">2026.03</div>
 </div>
 
-<div class="container">
-    
-    <!-- Executive Summary Dashboard -->
-    <div class="summary-grid">
-        <div class="s-card"><h4>분석 대상</h4><div class="val">3개 핵심 팀 / 24개 탭</div></div>
-        <div class="s-card"><h4>사용자 페르소나</h4><div class="val">기획·개발·디자인·관리</div></div>
-        <div class="s-card"><h4>식별 리스크</h4><div class="val">데이터 파편화 및 사일로</div></div>
-        <div class="s-card"><h4>최종 목표</h4><div class="val">Digital Asset化</div></div>
+<nav class="nav">
+  <div class="nav-tab active" onclick="showSection('overview')">개요 &amp; 현황</div>
+  <div class="nav-tab" onclick="showSection('issues')">이슈 분석</div>
+  <div class="nav-tab" onclick="showSection('swclass')">S/W 분류 체계</div>
+  <div class="nav-tab" onclick="showSection('foldertest')">폴더 구조 검토</div>
+  <div class="nav-tab" onclick="showSection('hybrid')">하이브리드 유형 분류</div>
+  <div class="nav-tab" onclick="showSection('user')">사용자 관점</div>
+  <div class="nav-tab" onclick="showSection('structure')">폴더 체계 설계</div>
+  <div class="nav-tab" onclick="showSection('fieldresult')">현장 성과품 분류</div>
+  <div class="nav-tab" onclick="showSection('guide')">운영 가이드</div>
+  <div class="nav-tab" onclick="showSection('nextstep')">향후 진행 방향</div>
+</nav>
+
+<div class="main">
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 1 : 개요 & 현황
+  ═══════════════════════════════════════════ -->
+  <div class="section active" id="section-overview">
+    <div class="section-header">
+      <h2>개요 &amp; 현황</h2>
+      <p>문서관리 재정비 추진 배경과 현재까지의 진행 경과</p>
     </div>
 
-    <!-- Navigation Tabs -->
-    <div class="tabs">
-        <div class="tab active" onclick="showSection(0)">1. 현황 분석 및 진단</div>
-        <div class="tab" onclick="showSection(1)">2. 통합 재설계(안)</div>
-        <div class="tab" onclick="showSection(2)">3. 운영 거버넌스</div>
-        <div class="tab" onclick="showSection(3)">4. 단계별 이행 전략</div>
+    <div class="grid-4" style="margin-bottom:20px">
+      <div class="metric-card">
+        <div class="metric-label">대상 S/W 수</div>
+        <div class="metric-value">30+</div>
+        <div class="metric-sub">전 부서 통합 대상</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">문서 분류 Depth</div>
+        <div class="metric-value">4</div>
+        <div class="metric-sub">최상단 → 탭 → 카테고리 → 서브</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">S/W 유형 분류</div>
+        <div class="metric-value">4</div>
+        <div class="metric-sub">하이브리드 표준 템플릿</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">핵심 목표</div>
+        <div class="metric-value">Zero</div>
+        <div class="metric-sub">PC 로컬 문서 Zero화</div>
+      </div>
     </div>
 
-    <!-- Section 1: Detailed Analysis & Diagnosis -->
-    <div id="sect0" class="section active">
-        <div class="analysis-grid">
-            <!-- Team 1: 구조물&STRANA -->
-            <div class="team-card">
-                <span class="team-badge b-stru">구조물 & STRANA (12개 탭)</span>
-                <div class="attr-row"><span class="attr-label">탭 성격</span><span class="attr-val">S/W별 9개 + Temp 3개</span></div>
-                <div class="attr-row"><span class="attr-label">카테고리</span><span class="attr-val">개발 흐름, 성과품, 참고자료 혼재</span></div>
-                <div class="attr-row"><span class="attr-label">특이사항</span><span class="attr-val"><span class="tag t-warn">Temp탭 상시화</span><span class="tag t-warn">성과레벨 불일치</span></span></div>
-                <button class="btn-detail" onclick="openModal('modal-team1')">상세 분석 데이터 보기</button>
+    <div class="grid-2" style="margin-bottom:16px">
+      <div class="card">
+        <div class="card-title">3대 핵심 문제</div>
+        <div class="issue-item">
+          <div class="issue-num" style="background:var(--red-light);color:var(--red)">1</div>
+          <div>
+            <div class="issue-title">데이터 파편화</div>
+            <div class="issue-desc">부서별 제각각인 분류 체계 → 자료 검색·활용 불가, 정보 고립</div>
+          </div>
+        </div>
+        <div class="issue-item">
+          <div class="issue-num" style="background:var(--amber-light);color:var(--amber)">2</div>
+          <div>
+            <div class="issue-title">지식 단절</div>
+            <div class="issue-desc">엔지니어링 로직(Why)과 개발 소스(How)의 연계 부족, 기술 전수 단절</div>
+          </div>
+        </div>
+        <div class="issue-item">
+          <div class="issue-num" style="background:var(--amber-light);color:var(--amber)">3</div>
+          <div>
+            <div class="issue-title">하드 의존</div>
+            <div class="issue-desc">개인 PC 저장 관행 → 데이터 유실 위험 및 협업 효율 저하</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">추진 목적</div>
+        <div class="issue-item">
+          <div class="issue-num" style="background:var(--accent-light);color:var(--accent)">①</div>
+          <div>
+            <div class="issue-title">지시사항 이행</div>
+            <div class="issue-desc">S/W 제품별 &amp; 목적별 분류 체계 수립 (사장님 가이드)</div>
+          </div>
+        </div>
+        <div class="issue-item">
+          <div class="issue-num" style="background:var(--accent-light);color:var(--accent)">②</div>
+          <div>
+            <div class="issue-title">지식 자산화</div>
+            <div class="issue-desc">핵심 알고리즘·설계 로직의 중앙 집중화 → 기업 자산 가치 극대화</div>
+          </div>
+        </div>
+        <div class="issue-item">
+          <div class="issue-num" style="background:var(--accent-light);color:var(--accent)">③</div>
+          <div>
+            <div class="issue-title">PC 문서 Zero</div>
+            <div class="issue-desc">시스템 중심의 상시 공유 환경 구축</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">진행 경과 (마일스톤)</div>
+      <div class="flow-row">
+        <div class="flow-step" style="background:var(--green-light);border-color:var(--green)">
+          <div class="step-num" style="color:var(--green)">STEP 1 ✓</div>
+          <div class="step-title">현황 분석</div>
+          <div class="step-sub">부서별 체계 실태 파악</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step" style="background:var(--green-light);border-color:var(--green)">
+          <div class="step-num" style="color:var(--green)">STEP 2 ✓</div>
+          <div class="step-title">시나리오 테스트</div>
+          <div class="step-sub">역할별 문서 접근 클릭 수 측정</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step" style="background:var(--green-light);border-color:var(--green)">
+          <div class="step-num" style="color:var(--green)">STEP 3 ✓</div>
+          <div class="step-title">이관 샘플 테스트</div>
+          <div class="step-sub">S/W 중심 구조 시범 이관 → 이슈 도출</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step" style="background:var(--green-light);border-color:var(--green)">
+          <div class="step-num" style="color:var(--green)">STEP 4 ✓</div>
+          <div class="step-title">폴더 구조 설계</div>
+          <div class="step-sub">하이브리드형 + 현장성과품 분류 방식 2안 비교</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step highlight">
+          <div class="step-num">STEP 5 ◀ 현재</div>
+          <div class="step-title">구조 확정·JSON 완성</div>
+          <div class="step-sub">To-Be v5 완성 (현장 최상단 분리)</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">STEP 6</div>
+          <div class="step-title">파일럿 적용</div>
+          <div class="step-sub">대상 S/W 선정 후 우선 적용</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">STEP 7</div>
+          <div class="step-title">전사 확대</div>
+          <div class="step-sub">가이드 배포 &amp; 전부서 이관</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 2 : 이슈 분석
+  ═══════════════════════════════════════════ -->
+  <div class="section" id="section-issues">
+    <div class="section-header">
+      <h2>이슈 분석</h2>
+      <p>이관 시뮬레이션 및 시나리오 테스트에서 발견된 문제</p>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:16px">
+      <div class="card">
+        <div class="card-title">발견된 이슈 목록</div>
+
+        <div class="issue-item">
+          <div class="issue-num" style="background:var(--red-light);color:var(--red)">1</div>
+          <div style="flex:1">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div class="issue-title">문서 접근 비용 과다</div>
+              <span class="badge badge-high">긴급</span>
             </div>
-            <!-- Team 2: Way Solution -->
-            <div class="team-card">
-                <span class="team-badge b-way">Way Solution (7개 탭)</span>
-                <div class="attr-row"><span class="attr-label">탭 성격</span><span class="attr-val">S/W 탭 3개 + 부서/성과 4개</span></div>
-                <div class="attr-row"><span class="attr-label">카테고리</span><span class="attr-val">공종별 알고리즘 / 기획문서 혼재</span></div>
-                <div class="attr-row"><span class="attr-label">특이사항</span><span class="attr-val"><span class="tag t-warn">부서운영탭 혼재</span><span class="tag t-warn">외부자료 방치</span></span></div>
-                <button class="btn-detail" onclick="openModal('modal-team2')">상세 분석 데이터 보기</button>
-            </div>
-            <!-- Team 3: 그래픽스 개발 -->
-            <div class="team-card">
-                <span class="team-badge b-graph">그래픽스 개발 (5개 탭)</span>
-                <div class="attr-row"><span class="attr-label">탭 성격</span><span class="attr-val">엔진 2개 + 현장 1개 + 팀운영 1개</span></div>
-                <div class="attr-row"><span class="attr-label">카테고리</span><span class="attr-val">셀 단위 분리 (엔진/솔루션/현장)</span></div>
-                <div class="attr-row"><span class="attr-label">특이사항</span><span class="attr-val"><span class="tag t-warn">버전표기 누락</span><span class="tag t-warn">팀운영 혼재</span></span></div>
-                <button class="btn-detail" onclick="openModal('modal-team3')">상세 분석 데이터 보기</button>
-            </div>
+            <div class="issue-desc">시나리오 테스트 결과, 역할·목적에 따라 동일 문서 도달에 클릭 수가 과도. 특히 부서 경계를 넘는 접점 문서는 위치 예측 자체가 어려움</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:85%;background:var(--red)"></div></div>
+          </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-top: 1.5rem;">
-            <div class="gov-card" style="background: #f8f9fa;">
-                <h5 style="margin-bottom: 12px; font-weight: 800; color: var(--secondary);">직군별 페르소나 및 요구사항</h5>
-                <p style="font-size: 0.85rem; color: #666; line-height: 1.6;">
-                    엔지니어는 '사양 이력 추적'을, 개발자는 '최신 사양 접근성'을 원하고 있습니다. 각 직군의 Pain Point를 분석한 결과를 확인하십시오.
-                </p>
-                <button class="btn-detail" onclick="openModal('modal-persona')">요구사항 분석 결과 보기</button>
+        <div class="issue-item">
+          <div class="issue-num" style="background:var(--red-light);color:var(--red)">2</div>
+          <div style="flex:1">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div class="issue-title">이관 시 빈 폴더 다수 발생</div>
+              <span class="badge badge-high">긴급</span>
             </div>
-            <div class="gov-card" style="background: #f8f9fa;">
-                <h5 style="margin-bottom: 12px; font-weight: 800; color: var(--success);">실무 인터뷰 및 혁신 아이디어</h5>
-                <p style="font-size: 0.85rem; color: #666; line-height: 1.6;">
-                    천지인팀 등 현업 부서의 실제 목소리와 TDC 문서 체계를 지능화하기 위한 혁신 제안(자동 구조화, M/H 연동 등)입니다.
-                </p>
-                <button class="btn-detail" onclick="openModal('modal-idea')">인터뷰 및 혁신 제안 보기</button>
-            </div>
+            <div class="issue-desc">일률적 템플릿을 전체 S/W에 강제 적용 시 문서가 없는 카테고리에 빈 폴더 생성 → 구조 신뢰도 저하, 사용자 혼란 가중</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:80%;background:var(--red)"></div></div>
+          </div>
         </div>
 
-        <!-- Common Issues -->
-        <div style="background: #fff; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border); margin-top: 1.5rem;">
-            <h5 style="margin-bottom: 1rem; color: var(--danger); font-weight: 800;">[공통 진단] 3팀 모두에서 반복되는 구조적 이슈</h5>
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; font-size: 0.85rem;">
-                <div style="background:#fdf2f2; padding:1rem; border-radius:8px;"><strong>팀 운영 문서 혼재</strong><br>세미나, 회의, 행정 문서가 S/W 개발 탭과 수평 배치되어 집중도 저하</div>
-                <div style="background:#fdf2f2; padding:1rem; border-radius:8px;"><strong>Naming 규칙 분열</strong><br>3팀 합산 15종 이상의 명명 패턴 혼재로 인해 데이터 검색 및 관리 불능</div>
-                <div style="background:#fdf2f2; padding:1rem; border-radius:8px;"><strong>카테고리 기준 부재</strong><br>공종별/기능별/단계별 기준이 섞여 있어 신규 인원 적응 및 인수인계 장애</div>
-                <div style="background:#fdf2f2; padding:1rem; border-radius:8px;"><strong>협업 워크플로우 단절</strong><br>기획-디자인-개발-검증 단계가 폴더 구조상에서 논리적으로 연결되지 않음</div>
+        <div class="issue-item">
+          <div class="issue-num" style="background:var(--amber-light);color:var(--amber)">3</div>
+          <div style="flex:1">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div class="issue-title">문서명 불명확 → 귀속 판단 어려움</div>
+              <span class="badge badge-mid">중요</span>
             </div>
+            <div class="issue-desc">기존 문서명에 내용 유추 정보 부족 + 동일 성격 문서의 다른 이름 병존 → 이관 시 분류 판단 불가 사례 다수</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:70%;background:var(--amber)"></div></div>
+          </div>
         </div>
-    </div>
 
-    <!-- Section 2: Integrated Collaboration Redesign -->
-    <div id="sect1" class="section">
-        <div class="sw-box">
-            <div class="sw-title">LEVEL 1: [ERP 프로젝트 코드] S/W 솔루션 자산 컨테이너</div>
-            <div class="flow-grid">
-                <div class="flow-cell">
-                    <h5>A. 기획 & 관리</h5>
-                    <span class="role-pill rp-eng">엔지니어</span><span class="role-pill rp-adm">관리자</span>
-                    <ul class="rm-list" style="font-size: 0.8rem; color: #666;">
-                        <li>기능 정의서 [SPEC]</li>
-                        <li>요구사항 목록 [REQ]</li>
-                        <li>사업 추진 계획 [PLAN]</li>
-                        <li>회의록 [MIN]</li>
-                    </ul>
-                </div>
-                <div class="flow-cell" style="background:#f9f9f9;">
-                    <h5>B. 설계 & 로직</h5>
-                    <span class="role-pill rp-eng">엔지니어</span>
-                    <ul class="rm-list" style="font-size: 0.8rem; color: #666;">
-                        <li>알고리즘 상세 설계</li>
-                        <li>계산 흐름도 & 입출력 정의</li>
-                        <li>엔지니어링 표준 기준문서</li>
-                    </ul>
-                </div>
-                <div class="flow-cell">
-                    <h5>C. 디자인 자산</h5>
-                    <span class="role-pill rp-dev">디자이너</span>
-                    <ul class="rm-list" style="font-size: 0.8rem; color: #666;">
-                        <li>Figma 원본/Deep Link</li>
-                        <li>화면 설계서 [UI]</li>
-                        <li>UI 컴포넌트 & 그래픽 에셋</li>
-                    </ul>
-                </div>
-                <div class="flow-cell" style="background:#f9f9f9;">
-                    <h5>D. 개발 & 구현</h5>
-                    <span class="role-pill rp-dev">개발자</span>
-                    <ul class="rm-list" style="font-size: 0.8rem; color: #666;">
-                        <li>API 명세서 [API]</li>
-                        <li>DB 설계서 & 아키텍처</li>
-                        <li>기술 결정 기록 [ADR]</li>
-                    </ul>
-                </div>
-                <div class="flow-cell">
-                    <h5>E. 검증 & 운영</h5>
-                    <span class="role-pill rp-eng">엔지니어</span><span class="role-pill rp-adm">관리자</span>
-                    <ul class="rm-list" style="font-size: 0.8rem; color: #666;">
-                        <li>정확도 검증 보고서</li>
-                        <li>테스트 케이스 결과 [TEST]</li>
-                        <li>릴리즈 노트 [REL]</li>
-                        <li>사용자 매뉴얼 [GUIDE]</li>
-                    </ul>
-                </div>
+        <div class="issue-item">
+          <div class="issue-num" style="background:var(--amber-light);color:var(--amber)">4</div>
+          <div style="flex:1">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div class="issue-title">엔지니어↔개발자 접점 문서 귀속 기준 없음</div>
+              <span class="badge badge-mid">중요</span>
             </div>
-            <div style="background: var(--accent); padding: 1rem; text-align: center; font-weight: 700; border-top: 2px solid var(--secondary);">
-                Z. 작업장 (WIP): 전 역할 실시간 협업 공간 → 승인 완료 시 A~E 공식 폴더 이동 (PC 문서 저장 ZERO 실현)
-            </div>
+            <div class="issue-desc">기능 명세서, 알고리즘 설계서 등 양쪽이 함께 참조하는 문서의 귀속 폴더가 불명확 → 이관 시 개인 판단에 의존</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:65%;background:var(--amber)"></div></div>
+          </div>
         </div>
-    </div>
 
-    <!-- Section 3: Governance Policy -->
-    <div id="sect2" class="section">
-        <div class="gov-grid">
-            <div class="gov-card">
-                <h5 style="margin-bottom:1.2rem; font-weight: 800;">계층별 관리 원칙</h5>
-                <div class="rule-item">
-                    <h6><span class="level-tag fixed">LEVEL 1~2</span> 탭 & 카테고리 [고정]</h6>
-                    <p style="font-size: 0.85rem; color: #666; margin-top: 6px;">전사 표준 SDLC(A~E, Z) 체계를 시스템 관리자가 강제로 배포합니다. 임의 삭제 및 명칭 변경이 불가하며 검색 효율성을 보장합니다.</p>
-                </div>
-                <div class="rule-item">
-                    <h6><span class="level-tag flexible">LEVEL 3~</span> 서브 카테고리 [유연]</h6>
-                    <p style="font-size: 0.85rem; color: #666; margin-top: 6px;">솔루션 특성(교량별, 공종별 등)에 따라 부서 자율로 하위 폴더를 구성할 수 있습니다. 단, 최상위 표준 원칙은 준수해야 합니다.</p>
-                </div>
+        <div class="issue-item">
+          <div class="issue-num" style="background:var(--amber-light);color:var(--amber)">5</div>
+          <div style="flex:1">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div class="issue-title">이관 후 구조 유지 보장 없음</div>
+              <span class="badge badge-mid">중요</span>
             </div>
-            <div class="gov-card">
-                <h5 style="margin-bottom:1.2rem; font-weight: 800;">Naming 규칙 (Activity 코드 별도 관리)</h5>
-                <div style="background: var(--bg); padding: 1.2rem; border-radius: 8px; font-family: monospace; text-align: center; margin-bottom: 1rem; border: 1px dashed var(--primary);">
-                    [유형태그] _ YYYY-MM-DD _ 파일명 _ v버전
-                </div>
-                <ul class="rm-list" style="font-size: 0.85rem; color: #666;">
-                    <li><strong>Activity 코드:</strong> 파일 저장 시 시스템 팝업에서 선택 (파일명 제외로 가독성 확보)</li>
-                    <li><strong>유형 태그:</strong> [SPEC], [UI], [API], [PLAN], [MIN], [REPORT] 등 공통 코드 사용</li>
-                    <li><strong>버전 관리:</strong> 핵심 사양서 및 엔진 라이브러리는 v1.0 형식 표기 의무화</li>
-                </ul>
-            </div>
+            <div class="issue-desc">구조를 바꿔도 임직원이 새 기준으로 문서를 생성·업로드하지 않으면 시간이 지나며 재파편화 발생. 정착 메커니즘 부재</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:60%;background:var(--amber)"></div></div>
+          </div>
         </div>
-    </div>
+      </div>
 
-    <!-- Section 4: Roadmap -->
-    <div id="sect3" class="section">
-        <div class="rm-grid">
-            <!-- Phase 1 -->
-            <div class="rm-card">
-                <div class="rm-head" style="background:#f8f9ff;">
-                    <span class="rm-phase">Phase 1. 구조 정비 (1~2주)</span>
-                    <h5 style="margin-top:5px; font-weight: 800;">탭 목적 분리 및 임시 탭 동결</h5>
-                </div>
-                <div class="rm-body">
-                    <ul class="rm-list">
-                        <li><strong>섹션 A/B 분리:</strong> 기술 자산과 팀 행정 문서의 물리적 분리 선언</li>
-                        <li><strong>팀 운영 탭 이동:</strong> 세미나, 회의록 탭을 섹션 B로 일괄 이동</li>
-                        <li><strong>임시 탭 등록 차단:</strong> 90/91/92번 탭 신규 등록 차단 및 이관 목록화</li>
-                    </ul>
-                </div>
-            </div>
-            <!-- Phase 2 -->
-            <div class="rm-card">
-                <div class="rm-head" style="background:#f8fff8;">
-                    <span class="rm-phase">Phase 2. 표준 적용 (1~2개월)</span>
-                    <h5 style="margin-top:5px; font-weight: 800;">S/W별 내부 정비 및 집중 이관</h5>
-                </div>
-                <div class="rm-body">
-                    <ul class="rm-list">
-                        <li><strong>표준 SDLC 폴더 생성:</strong> S/W 탭 내 A~E, Z 폴더 일괄 자동 생성</li>
-                        <li><strong>핵심 프로젝트 이관:</strong> 10개 주력 솔루션 최신 데이터를 신규 체계로 이동</li>
-                        <li><strong>Naming 리네이밍:</strong> 이관 대상 주요 문서에 표준 명명 규칙 적용</li>
-                    </ul>
-                </div>
-            </div>
-            <!-- Phase 3 -->
-            <div class="rm-card">
-                <div class="rm-head" style="background:#fffaf0;">
-                    <span class="rm-phase">Phase 3. 고도화 (3~6개월)</span>
-                    <h5 style="margin-top:5px; font-weight: 800;">전사 통합 운영 및 지능화</h5>
-                </div>
-                <div class="rm-body">
-                    <ul class="rm-list">
-                        <li><strong>참조 라이브러리 통합:</strong> 엔진(HmDraw 등) 문서 Single Source화</li>
-                        <li><strong>Activity 연동:</strong> 인트라넷 코드 선택 UI 구현 및 M/H 자동 정합성 검증</li>
-                        <li><strong>지속적 모니터링:</strong> PC 저장 Zero 실태 점검 및 기술 자산 활용 대시보드</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<!-- MODALS (Data from File 2 integrated) -->
-<!-- Team 1 Analysis Modal -->
-<div id="modal-team1" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal('modal-team1')">&times;</span>
-        <h3 class="modal-h3">구조물 & STRANA팀 상세 분석 및 진단</h3>
-        <table class="modal-table">
-            <tr><th width="20%">구성 현황</th><td>12개 탭 (9개 S/W 탭 + 3개 임시/아카이브 탭)</td></tr>
-            <tr><th>주요 문제</th><td>S/W 개발 흐름(기획/설계/구현)과 최종 성과품(도면/수량)이 뒤섞여 히스토리 추적 불가</td></tr>
-            <tr><th>특이사항</th><td>90/91/92번 'Temp' 탭에 500개 이상의 문서가 방치되어 있으며, 성과물 레벨이 부서마다 상이함</td></tr>
-            <tr><th>이관 방향</th><td>'BridgePlanner' 등 개별 S/W 컨테이너를 표준화하고, 과거 현장 성과품은 공통 아카이브로 격리 이관</td></tr>
-        </table>
-    </div>
-</div>
-
-<!-- Team 2 Analysis Modal -->
-<div id="modal-team2" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal('modal-team2')">&times;</span>
-        <h3 class="modal-h3">Way Solution팀 상세 분석 및 진단</h3>
-        <table class="modal-table">
-            <tr><th width="20%">구성 현황</th><td>7개 탭 (S/W 탭 3개 + 부서/성과/임시 4개)</td></tr>
-            <tr><th>주요 문제</th><td>공간정보 및 부서업무 탭이 메인 S/W 솔루션 제품군과 동일 선상에 위치하여 기술 자산 집중도 저하</td></tr>
-            <tr><th>특이사항</th><td>99.외부자료 폴더가 단순 보관소로 전락하여 정기적인 업데이트 및 관리 체계가 부재함</td></tr>
-            <tr><th>이관 방향</th><td>팀 운영 행정 문서를 섹션 B로 완벽 분리하고, 공종별 기획 문서를 표준 B카테고리로 통합 설계</td></tr>
-        </table>
-    </div>
-</div>
-
-<!-- Team 3 Analysis Modal -->
-<div id="modal-team3" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal('modal-team3')">&times;</span>
-        <h3 class="modal-h3">그래픽스 개발팀 상세 분석 및 진단</h3>
-        <table class="modal-table">
-            <tr><th width="20%">구성 현황</th><td>5개 탭 (엔진 2개 + 현장성과 1개 + 기능개발 1개 + 팀운영 1개)</td></tr>
-            <tr><th>주요 문제</th><td>엔진 및 기능 개발 과정에서 버전 표기(v1.0 등)가 누락되어 최신본 확인 및 협업 시 혼선 발생</td></tr>
-            <tr><th>특이사항</th><td>셀 단위로 폴더가 분리되어 있으나 셀 간 공통 기술(HmEG 등)에 대한 참조 경로가 단절되어 있음</td></tr>
-            <tr><th>이관 방향</th><td>엔진 버전 관리 가이드라인을 강제 적용하고, 전사 공통 참조 라이브러리 탭을 통해 기술 공유화 추진</td></tr>
-        </table>
-    </div>
-</div>
-
-<!-- Persona Analysis Modal -->
-<div id="modal-persona" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal('modal-persona')">&times;</span>
-        <h3 class="modal-h3">사용자 페르소나별 요구사항 및 진단</h3>
-        <table class="modal-table">
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">이슈별 해결 방향 요약</div>
+          <table class="comp-table">
             <thead>
-                <tr><th width="20%">직군</th><th>개발 단계(SDLC) 요구사항</th><th>완료 후 관리 단계 요구사항</th></tr>
+              <tr><th>이슈</th><th>해결 방향</th><th>적용 시점</th></tr>
             </thead>
             <tbody>
-                <tr>
-                    <td style="font-weight: 700;">엔지니어 (기획)</td>
-                    <td>사양 문서 버전 관리, 유사 사례 검색, 사양 변경 이력 추적</td>
-                    <td>현장 적용 성과 축적, 피드백 수집, 차기 버전 기능 도출</td>
-                </tr>
-                <tr>
-                    <td style="font-weight: 700;">개발자 / 디자인</td>
-                    <td>최신 사양서 상시 접근, 엔진 API 레퍼런스 가시성, 이전 구현 이력</td>
-                    <td>운영 환경 설정 최신화, 장애 대응 절차 체계화, 백로그 문서화</td>
-                </tr>
-                <tr>
-                    <td style="font-weight: 700;">부서 관리자</td>
-                    <td>전체 S/W 진도 점검, 협업 단계별 문서 접근성, 병목 지점 파악</td>
-                    <td>S/W 성과 지표 점검, 유지보수 비용/이슈 통합, 납품 이력 관리</td>
-                </tr>
+              <tr>
+                <td><span class="badge badge-high">이슈1</span> 접근 비용</td>
+                <td class="win">하이브리드형 카테고리 구조화</td>
+                <td>체계 설계 단계</td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-high">이슈2</span> 빈 폴더</td>
+                <td class="win">문서 존재 시에만 폴더 생성 원칙</td>
+                <td>체계 설계 단계</td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-mid">이슈3</span> 파일명</td>
+                <td class="win">파일명 규칙 수립 (S/W·단계·성격)</td>
+                <td>이관 전 선행</td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-mid">이슈4</span> 접점 문서</td>
+                <td class="win">Z. 공통참조 고정 카테고리 신설</td>
+                <td>체계 설계 단계</td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-mid">이슈5</span> 정착</td>
+                <td class="win">활용 가이드 + 분기 점검 루틴</td>
+                <td>이관 완료 후</td>
+              </tr>
             </tbody>
-        </table>
-    </div>
-</div>
+          </table>
+        </div>
 
-<!-- Interview & Innovation Modal -->
-<div id="modal-idea" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal('modal-idea')">&times;</span>
-        <h3 class="modal-h3">실무 인터뷰 및 시스템 혁신 제안 (Idea)</h3>
-        <div style="margin-bottom: 20px;">
-            <p style="font-weight: 800; color: var(--primary); margin-bottom: 8px;">[미니 인터뷰] 천지인팀 현장 목소리</p>
-            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-size: 0.9rem; line-height: 1.6;">
-                "구글 드라이브와 PM의 이중 관리 체계로 인한 피로도가 매우 높습니다. PM에서 <strong>실시간 문서 편집</strong>과 
-                <strong>고정 주소 링크(Deep Link)</strong> 기능이 지원된다면 PM 단일 체계로 완전 전환이 가능할 것으로 보입니다."
-            </div>
+        <div class="card">
+          <div class="card-title">파일명 규칙 (안)</div>
+          <div style="background:var(--surface2);border-radius:8px;padding:12px 16px;font-family:'IBM Plex Mono',monospace;font-size:12px;margin-bottom:12px;line-height:1.8">
+            <span style="color:var(--accent);font-weight:700">[S/W약어]</span>_<span style="color:var(--teal);font-weight:700">[단계]</span>_<span style="color:var(--amber);font-weight:700">[문서성격]</span>_<span style="color:var(--text2)">V00_YYYYMMDD</span>
+          </div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:10px">예시</div>
+          <div style="font-size:12px;font-family:'IBM Plex Mono',monospace;line-height:2;color:var(--text)">
+            BP_설계_알고리즘설계서_V01_20260311<br>
+            GIS_기획_요건정의서_V02_20260301<br>
+            WD_개발_화면명세서_V01_20260315
+          </div>
+          <div class="divider"></div>
+          <div style="font-size:11px;color:var(--text3)">※ 파일명 규칙 확정 후 이관 기준표에 반영 필요</div>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-            <div style="border: 1px solid var(--border); padding: 15px; border-radius: 8px;">
-                <p style="font-weight: 700; margin-bottom: 10px;">협업 지능화 제안</p>
-                <ul class="rm-list" style="font-size: 0.85rem; color: #666;">
-                    <li>파일명 입력 시 자동 개조식 및 구조화 UI 제공</li>
-                    <li>직군별 목표 도달 최단 경로 메뉴(Shortcut) 렌더링</li>
-                    <li>사용자 요구에 따른 스마트 정렬/필터링 기능</li>
-                </ul>
-            </div>
-            <div style="border: 1px solid var(--border); padding: 15px; border-radius: 8px;">
-                <p style="font-weight: 700; margin-bottom: 10px;">관리 효율화 제안</p>
-                <ul class="rm-list" style="font-size: 0.85rem; color: #666;">
-                    <li>Activity 코드를 통한 M/H 및 실적 자동 정합성 체크</li>
-                    <li>섹션 분류를 통한 기술 자산과 행정 문서의 논리적 격리</li>
-                    <li>폴더별 주 담당자(Owner) 지정을 통한 책임 관리제</li>
-                </ul>
-            </div>
-        </div>
+      </div>
     </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════
+       SECTION NEW : S/W 분류 체계
+  ═══════════════════════════════════════════ -->
+  <div class="section" id="section-swclass">
+    <div class="section-header">
+      <h2>S/W 분류 체계</h2>
+      <p>건설분야 S/W 전체를 4가지 유형으로 분류한 기준과 배정 현황</p>
+    </div>
+
+    <!-- 분류 기준 -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-title">분류 원칙 및 기준</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:10px">분류 판단 기준 3가지</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;gap:10px;padding:10px;background:var(--accent-light);border-radius:6px">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;color:var(--accent);flex-shrink:0;width:24px">①</div>
+              <div style="font-size:12px"><strong>주된 문서 발생 단계</strong> — 엔지니어링 설계 중심인지, UX·화면 중심인지, 해석·엔진 중심인지</div>
+            </div>
+            <div style="display:flex;gap:10px;padding:10px;background:var(--teal-light);border-radius:6px">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;color:var(--teal);flex-shrink:0;width:24px">②</div>
+              <div style="font-size:12px"><strong>주요 사용자</strong> — 엔지니어(도메인 로직)가 주도하는지, 개발자(기술구현)가 주도하는지</div>
+            </div>
+            <div style="display:flex;gap:10px;padding:10px;background:var(--purple-light);border-radius:6px">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;color:var(--purple);flex-shrink:0;width:24px">③</div>
+              <div style="font-size:12px"><strong>산출물 성격</strong> — 설계 계산서·도면이 핵심인지, UI/UX 산출물이 핵심인지, 엔진·라이브러리가 핵심인지</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:10px">경계 S/W 처리 원칙</div>
+          <div style="font-size:12px;line-height:1.8;color:var(--text2)">
+            복수 유형에 걸치는 S/W는 <strong>주된 사용 목적과 문서 발생 비중이 높은 단계</strong>를 기준으로 하나의 유형으로 확정합니다.<br><br>
+            보조적 성격의 카테고리는 C-3 기능명세서 또는 해당 단계 서브카테고리로 흡수합니다. 유형을 복수로 허용하면 관리 복잡도가 급격히 올라가기 때문에 단일 배정이 원칙입니다.<br><br>
+            <span style="color:var(--amber);font-weight:600">※ 최종 유형은 각 S/W 담당팀 인터뷰 후 확정 예정</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4가지 유형 요약 -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">
+      <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden">
+        <div style="background:var(--accent);color:white;padding:10px 14px">
+          <div style="font-size:10px;opacity:0.7;font-family:'IBM Plex Mono',monospace">TYPE A</div>
+          <div style="font-size:13px;font-weight:600">엔지니어링 솔루션형</div>
+        </div>
+        <div style="padding:10px 14px;font-size:11px;color:var(--text2);line-height:1.7">
+          도메인 설계·계산 로직 중심<br>엔지니어 기획 비중 높음<br>
+          <strong style="color:var(--accent)">B. 엔지니어링 설계</strong> 카테고리가 핵심
+        </div>
+      </div>
+      <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden">
+        <div style="background:var(--teal);color:white;padding:10px 14px">
+          <div style="font-size:10px;opacity:0.7;font-family:'IBM Plex Mono',monospace">TYPE B</div>
+          <div style="font-size:13px;font-weight:600">GIS·데이터 플랫폼형</div>
+        </div>
+        <div style="padding:10px 14px;font-size:11px;color:var(--text2);line-height:1.7">
+          공간정보·데이터 처리 중심<br>외부 연동·검증 문서 비중 높음<br>
+          <strong style="color:var(--teal)">B. 데이터 설계·구조</strong> + <strong style="color:var(--teal)">E. 연동·검증</strong>
+        </div>
+      </div>
+      <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden">
+        <div style="background:var(--coral);color:white;padding:10px 14px">
+          <div style="font-size:10px;opacity:0.7;font-family:'IBM Plex Mono',monospace">TYPE C</div>
+          <div style="font-size:13px;font-weight:600">시각화·서비스형</div>
+        </div>
+        <div style="padding:10px 14px;font-size:11px;color:var(--text2);line-height:1.7">
+          UI/UX·사용자 접점 중심<br>화면설계·운영 문서 비중 높음<br>
+          <strong style="color:var(--coral)">B. UX·화면설계</strong> + <strong style="color:var(--coral)">E. 운영·배포·매뉴얼</strong>
+        </div>
+      </div>
+      <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden">
+        <div style="background:var(--purple);color:white;padding:10px 14px">
+          <div style="font-size:10px;opacity:0.7;font-family:'IBM Plex Mono',monospace">TYPE D</div>
+          <div style="font-size:13px;font-weight:600">그래픽·엔진형</div>
+        </div>
+        <div style="padding:10px 14px;font-size:11px;color:var(--text2);line-height:1.7">
+          수치해석·3D 렌더링 엔진 중심<br>아키텍처·검증 문서 비중 높음<br>
+          <strong style="color:var(--purple)">B. 수치해석·알고리즘</strong> + <strong style="color:var(--purple)">C. 아키텍처·기술설계</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- 전체 S/W 유형 배정표 -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-title">전체 S/W 유형 배정 현황</div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;padding:8px 12px;background:var(--amber-light);border-radius:6px;display:flex;gap:8px;align-items:center">
+        <span style="color:var(--amber);font-weight:600">⚠</span>
+        사내 전용 S/W (SW 사용 범위가 대외 서비스가 아닌 내부 업무용인 경우) 및 R&D 과제·BEPs는 이번 분류 범위에서 제외합니다. 순수 건설분야 기술 S/W를 우선 대상으로 합니다.
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--accent);padding:6px 10px;background:var(--accent-light);border-radius:6px;margin-bottom:8px">구조분야 Solution</div>
+          <table class="comp-table" style="font-size:11px">
+            <thead><tr><th>S/W명</th><th>유형</th><th>배정 근거</th><th>상태</th></tr></thead>
+            <tbody>
+              <tr><td>BridgePlanner</td><td><span class="badge badge-info">A형</span></td><td>교량 설계 계산·알고리즘 핵심</td><td class="win">확정</td></tr>
+              <tr><td>DRZainer</td><td><span class="badge badge-info">A형</span></td><td>도로 구조물 설계 로직 중심</td><td class="win">확정</td></tr>
+              <tr><td>NodularZainer</td><td><span class="badge badge-info">A형</span></td><td>공법기술개발 + 실물실증</td><td class="win">확정</td></tr>
+              <tr><td>AbutZainer</td><td><span class="badge badge-info">A형</span></td><td>교대 설계 계산 중심</td><td class="win">확정</td></tr>
+              <tr><td>PierZainer</td><td><span class="badge badge-info">A형</span></td><td>교각 설계 계산 중심</td><td class="win">확정</td></tr>
+              <tr><td>BoxZainer</td><td><span class="badge badge-info">A형</span></td><td>박스구조물 설계 중심</td><td class="win">확정</td></tr>
+              <tr><td>WallZainer</td><td><span class="badge badge-info">A형</span></td><td>옹벽 설계 계산 중심</td><td class="win">확정</td></tr>
+              <tr><td>TunnelZainer</td><td><span class="badge badge-info">A형</span></td><td>터널 설계 알고리즘 중심</td><td class="win">확정</td></tr>
+            </tbody>
+          </table>
+
+          <div style="font-size:12px;font-weight:700;color:var(--coral);padding:6px 10px;background:var(--coral-light);border-radius:6px;margin:12px 0 8px">도로 및 교통 Solution</div>
+          <table class="comp-table" style="font-size:11px">
+            <thead><tr><th>S/W명</th><th>유형</th><th>배정 근거</th><th>상태</th></tr></thead>
+            <tbody>
+              <tr><td>WayPrimal</td><td><span class="badge badge-info">A형</span></td><td>도로 계산 엔진·알고리즘 중심</td><td class="win">확정</td></tr>
+              <tr><td>WayConfirm</td><td><span class="badge badge-info">A형</span></td><td>도로 확인 계산 중심</td><td class="win">확정</td></tr>
+              <tr><td>WayDraw</td><td><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:var(--coral-light);color:var(--coral)">C형</span></td><td>도면 시각화·UI 중심, CTB·템플릿 비중 높음</td><td class="win">확정</td></tr>
+              <tr><td>WayShop</td><td><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:var(--coral-light);color:var(--coral)">C형</span></td><td>UI/UX 도면 서비스 중심</td><td class="win">확정</td></tr>
+              <tr><td>TOVA</td><td><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:var(--coral-light);color:var(--coral)">C형</span></td><td>교통 시뮬레이션 서비스·홈페이지 구축</td><td style="color:var(--amber)">담당팀 확인필요</td></tr>
+            </tbody>
+          </table>
+
+          <div style="font-size:12px;font-weight:700;color:var(--teal);padding:6px 10px;background:var(--teal-light);border-radius:6px;margin:12px 0 8px">수리·수공 Solution</div>
+          <table class="comp-table" style="font-size:11px">
+            <thead><tr><th>S/W명</th><th>유형</th><th>배정 근거</th><th>상태</th></tr></thead>
+            <tbody>
+              <tr><td>LifeLine-Water</td><td><span class="badge badge-info">A형</span></td><td>관망해석·수리 계산 알고리즘 중심</td><td class="win">확정</td></tr>
+              <tr><td>강우강도산정 프로그램</td><td><span class="badge badge-info">A형</span></td><td>수문 계산 알고리즘 중심</td><td class="win">확정</td></tr>
+              <tr><td>IPIPES</td><td><span class="badge badge-info">A형</span></td><td>상하수도 설계 계산 중심</td><td class="win">확정</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--amber);padding:6px 10px;background:var(--amber-light);border-radius:6px;margin-bottom:8px">시공·관리 Solution</div>
+          <table class="comp-table" style="font-size:11px">
+            <thead><tr><th>S/W명</th><th>유형</th><th>배정 근거</th><th>상태</th></tr></thead>
+            <tbody>
+              <tr><td>bCMf</td><td><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:var(--coral-light);color:var(--coral)">C형</span></td><td>시공관리 서비스·화면기획 중심, Raw data 관리</td><td class="win">확정</td></tr>
+              <tr><td>TwinHighway</td><td><span class="badge badge-info">A형</span></td><td>도로 엔지니어링 시뮬레이션 중심</td><td style="color:var(--amber)">담당팀 확인필요</td></tr>
+              <tr><td>GSIM</td><td><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:var(--coral-light);color:var(--coral)">C형</span></td><td>시공 관제 서비스·UI 중심</td><td style="color:var(--amber)">담당팀 확인필요</td></tr>
+              <tr><td>WatchBIM</td><td><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:var(--coral-light);color:var(--coral)">C형</span></td><td>BIM 시각화 서비스·스크립트 중심</td><td class="win">확정</td></tr>
+              <tr><td>CCP</td><td><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:var(--coral-light);color:var(--coral)">C형</span></td><td>현장 관제 플랫폼·UI 중심</td><td class="win">확정</td></tr>
+              <tr><td>Domainer</td><td><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:var(--teal-light);color:var(--teal)">B형</span></td><td>공간데이터 플랫폼·외부연동 중심</td><td style="color:var(--amber)">담당팀 확인필요</td></tr>
+            </tbody>
+          </table>
+
+          <div style="font-size:12px;font-weight:700;color:var(--teal);padding:6px 10px;background:var(--teal-light);border-radius:6px;margin:12px 0 8px">조사측량&amp;GIS Solution</div>
+          <table class="comp-table" style="font-size:11px">
+            <thead><tr><th>S/W명</th><th>유형</th><th>배정 근거</th><th>상태</th></tr></thead>
+            <tbody>
+              <tr><td>천지인</td><td><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:var(--teal-light);color:var(--teal)">B형</span></td><td>공간정보 처리·GIS Server 연동 중심</td><td class="win">확정</td></tr>
+              <tr><td>GAIA</td><td><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:var(--teal-light);color:var(--teal)">B형</span></td><td>공간DB·좌표계 설계 중심</td><td class="win">확정</td></tr>
+              <tr><td>KNGIL</td><td><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:var(--teal-light);color:var(--teal)">B형</span></td><td>GIS 기반 상하수도 데이터 플랫폼</td><td class="win">확정</td></tr>
+              <tr><td>Surveyor</td><td><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:var(--teal-light);color:var(--teal)">B형</span></td><td>측량·공간데이터 처리 중심</td><td class="win">확정</td></tr>
+              <tr><td>GIS Mapper</td><td><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:var(--teal-light);color:var(--teal)">B형</span></td><td>공간정보 매핑·연동 중심</td><td class="win">확정</td></tr>
+              <tr><td>Cadaster (기준 용지도)</td><td><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:var(--teal-light);color:var(--teal)">B형</span></td><td>지적 공간DB 중심</td><td class="win">확정</td></tr>
+            </tbody>
+          </table>
+
+          <div style="font-size:12px;font-weight:700;color:var(--purple);padding:6px 10px;background:var(--purple-light);border-radius:6px;margin:12px 0 8px">그래픽&amp;엔진 Solution</div>
+          <table class="comp-table" style="font-size:11px">
+            <thead><tr><th>S/W명</th><th>유형</th><th>배정 근거</th><th>상태</th></tr></thead>
+            <tbody>
+              <tr><td>STRANA</td><td><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:var(--purple-light);color:var(--purple)">D형</span></td><td>수치해석 엔진·해석이론 중심</td><td class="win">확정</td></tr>
+              <tr><td>HmGE&amp;HmDraw</td><td><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:var(--purple-light);color:var(--purple)">D형</span></td><td>그래픽 엔진·렌더링 중심</td><td class="win">확정</td></tr>
+              <tr><td>EG-BIM</td><td><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:var(--purple-light);color:var(--purple)">D형</span></td><td>3D 엔진+명령어 구현 중심 (C형 요소 병존)</td><td style="color:var(--amber)">담당팀 확인필요</td></tr>
+              <tr><td>3D Modeler</td><td><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:var(--purple-light);color:var(--purple)">D형</span></td><td>렌더링 파이프라인·알고리즘 중심</td><td class="win">확정</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 제외 항목 -->
+    <div class="card">
+      <div class="card-title">이번 분류 제외 항목 및 사유</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+        <div style="padding:12px;background:var(--surface2);border-radius:8px;border:1px dashed var(--border2)">
+          <div style="font-size:12px;font-weight:600;margin-bottom:6px;color:var(--text2)">R&D 과제</div>
+          <div style="font-size:11px;color:var(--text2);line-height:1.6">XR플래그십, 스마트건설-10세부 등 정부 R&D 과제는 프로젝트·연차 구조가 특성. S/W 중심 분류보다 과제 단위 관리가 적합하여 별도 처리 예정</div>
+        </div>
+        <div style="padding:12px;background:var(--surface2);border-radius:8px;border:1px dashed var(--border2)">
+          <div style="font-size:12px;font-weight:600;margin-bottom:6px;color:var(--text2)">BEPs</div>
+          <div style="font-size:11px;color:var(--text2);line-height:1.6">BIM 표준·기획 자료 성격으로 특정 S/W 산출물이 아닌 기술 기획 자료에 해당. 기술기획 탭(GPD) 또는 별도 체계로 관리 검토 중</div>
+        </div>
+        <div style="padding:12px;background:var(--surface2);border-radius:8px;border:1px dashed var(--border2)">
+          <div style="font-size:12px;font-weight:600;margin-bottom:6px;color:var(--text2)">기술기획 탭 (467개)</div>
+          <div style="font-size:11px;color:var(--text2);line-height:1.6">GPD(총괄기획실) 관리 영역으로 TDC 재정비 범위 포함 여부 미확정. AI기획(418개)도 동일하게 GPD 또는 별도 관리 방향 검토 중</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ═══════════════════════════════════════════
+       SECTION 7 : 폴더 구조 검토
+  ═══════════════════════════════════════════ -->
+  <div class="section" id="section-foldertest">
+    <div class="section-header">
+      <h2>폴더 구조 검토</h2>
+      <p>하이브리드형 적용 시 발생한 이슈와 현장 성과품 분류 방식 비교</p>
+    </div>
+
+    <!-- 하이브리드형 구조 설명 -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-title">하이브리드형 4 Depth 구조 (확정)</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">
+        <div style="padding:12px;background:var(--accent);border-radius:8px;color:white;text-align:center">
+          <div style="font-size:10px;opacity:0.7;margin-bottom:4px;font-family:'IBM Plex Mono',monospace">Depth 0</div>
+          <div style="font-size:13px;font-weight:600">최상단 그룹</div>
+          <div style="font-size:11px;opacity:0.8;margin-top:4px">구조분야 / 도로교통 등</div>
+        </div>
+        <div style="padding:12px;background:var(--teal);border-radius:8px;color:white;text-align:center">
+          <div style="font-size:10px;opacity:0.7;margin-bottom:4px;font-family:'IBM Plex Mono',monospace">Depth 1 (탭)</div>
+          <div style="font-size:13px;font-weight:600">S/W명</div>
+          <div style="font-size:11px;opacity:0.8;margin-top:4px">BridgePlanner, WayDraw…</div>
+        </div>
+        <div style="padding:12px;background:var(--purple);border-radius:8px;color:white;text-align:center">
+          <div style="font-size:10px;opacity:0.7;margin-bottom:4px;font-family:'IBM Plex Mono',monospace">Depth 2 (카테고리)</div>
+          <div style="font-size:13px;font-weight:600">업무 단계</div>
+          <div style="font-size:11px;opacity:0.8;margin-top:4px">A.기획 ~ E.검수 / Z.작업장</div>
+        </div>
+        <div style="padding:12px;background:var(--surface2);border-radius:8px;text-align:center;border:1px solid var(--border2)">
+          <div style="font-size:10px;color:var(--text3);margin-bottom:4px;font-family:'IBM Plex Mono',monospace">Depth 3 (서브)</div>
+          <div style="font-size:13px;font-weight:500">세부 분류</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:4px">A-1.기획문서 / B-1.알고리즘…</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+        <div style="padding:8px 12px;background:var(--accent-light);border-radius:6px;font-size:11px">
+          <div style="font-weight:600;color:var(--accent);margin-bottom:3px">A형 — 엔지니어링 솔루션</div>
+          <div style="color:var(--text2)">B.엔지니어링설계 / C.기능요건명세 / E.검수품질관리</div>
+        </div>
+        <div style="padding:8px 12px;background:var(--teal-light);border-radius:6px;font-size:11px">
+          <div style="font-weight:600;color:var(--teal);margin-bottom:3px">B형 — GIS·데이터 플랫폼</div>
+          <div style="color:var(--text2)">B.데이터설계구조 / E.연동검증</div>
+        </div>
+        <div style="padding:8px 12px;background:var(--coral-light);border-radius:6px;font-size:11px">
+          <div style="font-weight:600;color:var(--coral);margin-bottom:3px">C형 — 시각화·서비스</div>
+          <div style="color:var(--text2)">B.UX화면설계 / E.운영배포매뉴얼</div>
+        </div>
+        <div style="padding:8px 12px;background:var(--purple-light);border-radius:6px;font-size:11px">
+          <div style="font-weight:600;color:var(--purple);margin-bottom:3px">D형 — 그래픽·엔진</div>
+          <div style="color:var(--text2)">B.수치해석알고리즘 / C.아키텍처기술설계 / E.검증테스트</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 이관 테스트 이슈 -->
+    <div class="grid-2" style="margin-bottom:16px">
+      <div class="card">
+        <div class="card-title">이관 샘플 테스트 — 발견된 구조 이슈</div>
+        <div class="issue-item">
+          <div class="issue-num" style="background:var(--red-light);color:var(--red)">①</div>
+          <div>
+            <div class="issue-title">빈 폴더 다수 발생</div>
+            <div class="issue-desc">일률 템플릿 적용 시 S/W마다 실제 문서 없는 카테고리에 빈 폴더 생성. 예) WayDraw에 "B. 엔지니어링 설계" 폴더, BridgePlanner에 "B. UX·화면설계" 폴더</div>
+            <div style="margin-top:6px;padding:6px 10px;background:var(--green-light);border-radius:4px;font-size:11px;color:var(--green)">✓ 해결 — 유형별 최적화 카테고리 적용, 문서 존재 시에만 폴더 생성 원칙</div>
+          </div>
+        </div>
+        <div class="issue-item">
+          <div class="issue-num" style="background:var(--red-light);color:var(--red)">②</div>
+          <div>
+            <div class="issue-title">엔지니어↔개발자 접점 문서 귀속 불명확</div>
+            <div class="issue-desc">기능 명세서, 알고리즘 설계서 등 양쪽이 참조하는 문서의 폴더 귀속 판단 불가 → 이관 작업자마다 다른 폴더에 배치</div>
+            <div style="margin-top:6px;padding:6px 10px;background:var(--green-light);border-radius:4px;font-size:11px;color:var(--green)">✓ 해결 — C-3. 기능명세서·알고리즘 설계서 서브카테고리로 귀속 고정</div>
+          </div>
+        </div>
+        <div class="issue-item">
+          <div class="issue-num" style="background:var(--amber-light);color:var(--amber)">③</div>
+          <div>
+            <div class="issue-title">현장 성과품 문서의 귀속 위치 모호</div>
+            <div class="issue-desc">대산-당진 현장의 설계도·수량산출서 등이 S/W 탭 안에서 어느 단계(B.설계? E.검수?)에 귀속해야 하는지 불명확. 같은 현장이 6개 S/W에 분산</div>
+            <div style="margin-top:6px;padding:6px 10px;background:var(--accent-light);border-radius:4px;font-size:11px;color:var(--accent)">→ 별도 검토 — 성과품 분류 방식 2가지 비교 후 결정</div>
+          </div>
+        </div>
+        <div class="issue-item">
+          <div class="issue-num" style="background:var(--amber-light);color:var(--amber)">④</div>
+          <div>
+            <div class="issue-title">Z. 작업장의 성격 재정의 필요</div>
+            <div class="issue-desc">기존 Z.공통참조(접점 문서 착지점)에서 Z.작업장(팀별 임시 작업 공간)으로 기능 전환. 기능명세서 등은 C-3으로 흡수 완료</div>
+            <div style="margin-top:6px;padding:6px 10px;background:var(--green-light);border-radius:4px;font-size:11px;color:var(--green)">✓ 해결 — Z-1.엔지니어링팀 / Z-2.개발팀 / Z-3.디자인팀 작업장으로 확정</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">S/W별 유형 배정 현황</div>
+        <table class="comp-table">
+          <thead>
+            <tr><th>S/W</th><th>유형</th><th>주요 특이 카테고리</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>BridgePlanner</td><td><span class="badge badge-info">A형</span></td><td>B.기본이론·알고리즘, C-1.UI&UX명세서</td></tr>
+            <tr><td>NodularZainer</td><td><span class="badge badge-info">A형</span></td><td>B-2.실물실증·시뮬, E-2.해외기술협력</td></tr>
+            <tr><td>TunnelZainer</td><td><span class="badge badge-info">A형</span></td><td>현장 성과품 多 (제룡·보령·인제 등)</td></tr>
+            <tr><td>WayDraw</td><td><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:var(--coral-light);color:var(--coral)">C형</span></td><td>B.도면기획, D-2.양식·템플릿·CTB</td></tr>
+            <tr><td>bCMf</td><td><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:var(--coral-light);color:var(--coral)">C형</span></td><td>D-3.공사중생산문서(Raw data)</td></tr>
+            <tr><td>천지인</td><td><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:var(--teal-light);color:var(--teal)">B형</span></td><td>E.GIS Server·WAS Server 연동</td></tr>
+            <tr><td>STRANA</td><td><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:var(--purple-light);color:var(--purple)">D형</span></td><td>B.해석이론, C-2.refs(stranaIO 등)</td></tr>
+            <tr><td>EG-BIM</td><td><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:var(--purple-light);color:var(--purple)">D형</span></td><td>B.명령어시뮬, C.그리미·꾸러미·바꾸미</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:12px;padding:10px;background:var(--amber-light);border-radius:6px;font-size:11px;color:var(--amber)">
+          <strong>협의 필요 항목:</strong> 기술기획(467개) GPD 포함 여부 / Construction Control(1,081개) 귀속 / AI기획(418개) 분리 여부
+        </div>
+      </div>
+    </div>
+
+    <!-- 미반영 항목 -->
+    <div class="card">
+      <div class="card-title">기존 폴더 체계 대비 미반영·이슈 항목</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+        <div style="border-left:3px solid var(--red);padding:10px 14px;background:var(--red-light);border-radius:0 6px 6px 0">
+          <div style="font-size:12px;font-weight:600;color:var(--red);margin-bottom:6px">미분류 대용량 탭</div>
+          <div style="font-size:11px;color:var(--text);line-height:1.7">
+            [Construction Control] 1,081개 — 단가·공정산출 특성, bCMf 또는 TwinHighway 귀속 여부 미결<br>
+            [시공상세도] 177개 — R&D 성과품 성격, 별도 탭 또는 S/W 하위 편입 미결
+          </div>
+        </div>
+        <div style="border-left:3px solid var(--amber);padding:10px 14px;background:var(--amber-light);border-radius:0 6px 6px 0">
+          <div style="font-size:12px;font-weight:600;color:var(--amber);margin-bottom:6px">관리 주체 불명확</div>
+          <div style="font-size:11px;color:var(--text);line-height:1.7">
+            [기술기획] 467개 — GPD 관리 영역인지 TDC 재정비 포함인지 미확정<br>
+            [AI기획] 418개 — GPD 또는 별도 TDC 탭 여부 미결<br>
+            법령·지침 문서 → CEDAs 이관 예정
+          </div>
+        </div>
+        <div style="border-left:3px solid var(--accent);padding:10px 14px;background:var(--accent-light);border-radius:0 6px 6px 0">
+          <div style="font-size:12px;font-weight:600;color:var(--accent);margin-bottom:6px">추가 확인 필요</div>
+          <div style="font-size:11px;color:var(--text);line-height:1.7">
+            경계 S/W 유형 확정 (EG-BIM: C형↔D형)<br>
+            현장 성과품 '성과품' 정의 — 설계도·수량만? 공문·회의록 포함?<br>
+            bCMf Raw data 성격 별도 정의 필요
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 4 : 하이브리드 유형 분류
+  ═══════════════════════════════════════════ -->
+  <div class="section" id="section-hybrid">
+    <div class="section-header">
+      <h2>하이브리드 유형 분류</h2>
+      <p>S/W 성격별 최적화된 표준 카테고리 구성 (4가지 유형)</p>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:16px">
+      <div class="type-card">
+        <div class="type-header" style="background:var(--accent-light);color:var(--accent)">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px">TYPE A</span>
+          엔지니어링 솔루션형
+        </div>
+        <div class="type-body">
+          <div style="font-size:11px;color:var(--text2);margin-bottom:10px">도메인 설계·계산 로직 중심 / 엔지니어 기획 비중 높음</div>
+          <div class="type-cat"><span class="type-cat-label">A.</span><span class="type-cat-name">기획·조사</span><span class="type-cat-desc">공통 고정</span></div>
+          <div class="type-cat"><span class="type-cat-label">B.</span><span class="type-cat-name">엔지니어링 설계</span><span class="type-cat-desc">도메인 로직, 계산 알고리즘</span></div>
+          <div class="type-cat"><span class="type-cat-label">C.</span><span class="type-cat-name">기능 요건·명세</span><span class="type-cat-desc">엔지니어→개발자 인터페이스</span></div>
+          <div class="type-cat"><span class="type-cat-label">D.</span><span class="type-cat-name">개발·구현</span><span class="type-cat-desc"></span></div>
+          <div class="type-cat"><span class="type-cat-label">E.</span><span class="type-cat-name">검수·품질관리</span><span class="type-cat-desc"></span></div>
+          <div class="type-cat"><span class="type-cat-label">Z.</span><span class="type-cat-name">공통참조</span><span class="type-cat-desc">공통 고정</span></div>
+          <div class="type-sw"><strong>해당 S/W:</strong> BridgePlanner, DRZainer, NodularZainer, AbutZainer, PierZainer, BoxZainer, WallZainer, TunnelZainer, WayPrimal, WayConfirm, LifeLine-Water, 강우강도산정, IPIPES, TwinHighway</div>
+        </div>
+      </div>
+
+      <div class="type-card">
+        <div class="type-header" style="background:var(--teal-light);color:var(--teal)">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px">TYPE B</span>
+          GIS·데이터 플랫폼형
+        </div>
+        <div class="type-body">
+          <div style="font-size:11px;color:var(--text2);margin-bottom:10px">공간정보·데이터 처리 중심 / 연동·검증 문서 비중 높음</div>
+          <div class="type-cat"><span class="type-cat-label">A.</span><span class="type-cat-name">기획·조사</span><span class="type-cat-desc">공통 고정</span></div>
+          <div class="type-cat"><span class="type-cat-label">B.</span><span class="type-cat-name">데이터 설계·구조</span><span class="type-cat-desc">공간DB, 좌표계, 데이터 흐름</span></div>
+          <div class="type-cat"><span class="type-cat-label">C.</span><span class="type-cat-name">기능 요건·명세</span><span class="type-cat-desc"></span></div>
+          <div class="type-cat"><span class="type-cat-label">D.</span><span class="type-cat-name">개발·구현</span><span class="type-cat-desc"></span></div>
+          <div class="type-cat"><span class="type-cat-label">E.</span><span class="type-cat-name">연동·검증</span><span class="type-cat-desc">외부 시스템 연동, 정합성 검증</span></div>
+          <div class="type-cat"><span class="type-cat-label">Z.</span><span class="type-cat-name">공통참조</span><span class="type-cat-desc">공통 고정</span></div>
+          <div class="type-sw"><strong>해당 S/W:</strong> 천지인, GAIA, KNGIL, Surveyor, GIS Mapper, Cadaster(기준 용지도), Domainer</div>
+        </div>
+      </div>
+
+      <div class="type-card">
+        <div class="type-header" style="background:var(--coral-light);color:var(--coral)">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px">TYPE C</span>
+          시각화·서비스형
+        </div>
+        <div class="type-body">
+          <div style="font-size:11px;color:var(--text2);margin-bottom:10px">UI/UX·사용자 접점 중심 / 화면설계·운영 문서 비중 높음</div>
+          <div class="type-cat"><span class="type-cat-label">A.</span><span class="type-cat-name">기획·조사</span><span class="type-cat-desc">공통 고정</span></div>
+          <div class="type-cat"><span class="type-cat-label">B.</span><span class="type-cat-name">UX·화면설계</span><span class="type-cat-desc">와이어프레임, 프로토타입</span></div>
+          <div class="type-cat"><span class="type-cat-label">C.</span><span class="type-cat-name">기능 요건·명세</span><span class="type-cat-desc"></span></div>
+          <div class="type-cat"><span class="type-cat-label">D.</span><span class="type-cat-name">개발·구현</span><span class="type-cat-desc"></span></div>
+          <div class="type-cat"><span class="type-cat-label">E.</span><span class="type-cat-name">운영·배포·매뉴얼</span><span class="type-cat-desc">사용자 가이드, 배포 이력</span></div>
+          <div class="type-cat"><span class="type-cat-label">Z.</span><span class="type-cat-name">공통참조</span><span class="type-cat-desc">공통 고정</span></div>
+          <div class="type-sw"><strong>해당 S/W:</strong> WayDraw, WayShop, TOVA, bCMf, GSIM, WatchBIM, CCP</div>
+        </div>
+      </div>
+
+      <div class="type-card">
+        <div class="type-header" style="background:var(--purple-light);color:var(--purple)">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px">TYPE D</span>
+          그래픽·엔진형
+        </div>
+        <div class="type-body">
+          <div style="font-size:11px;color:var(--text2);margin-bottom:10px">수치해석·3D 렌더링 엔진 중심 / 아키텍처·검증 문서 비중 높음</div>
+          <div class="type-cat"><span class="type-cat-label">A.</span><span class="type-cat-name">기획·조사</span><span class="type-cat-desc">공통 고정</span></div>
+          <div class="type-cat"><span class="type-cat-label">B.</span><span class="type-cat-name">수치해석·알고리즘 설계</span><span class="type-cat-desc">해석 이론, 수식, 계산 로직</span></div>
+          <div class="type-cat"><span class="type-cat-label">C.</span><span class="type-cat-name">아키텍처·기술설계</span><span class="type-cat-desc">엔진 구조, 모듈, 렌더링</span></div>
+          <div class="type-cat"><span class="type-cat-label">D.</span><span class="type-cat-name">개발·구현</span><span class="type-cat-desc"></span></div>
+          <div class="type-cat"><span class="type-cat-label">E.</span><span class="type-cat-name">검증·테스트</span><span class="type-cat-desc">해석 결과 검증, 정확도 테스트</span></div>
+          <div class="type-cat"><span class="type-cat-label">Z.</span><span class="type-cat-name">공통참조</span><span class="type-cat-desc">공통 고정</span></div>
+          <div class="type-sw"><strong>해당 S/W:</strong> STRANA, HmGE&HmDraw, EG-BIM, 3D Modeler</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">일률형 vs 하이브리드형 비교</div>
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>비교 항목</th>
+            <th>일률형</th>
+            <th>하이브리드형 (권장)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>구조 학습 비용</td>
+            <td class="win">낮음 — 하나만 외우면 됨</td>
+            <td>중간 — 4가지 유형 패턴 학습 필요</td>
+          </tr>
+          <tr>
+            <td>빈 폴더 발생</td>
+            <td class="lose">높음 — 이미 테스트에서 확인된 문제</td>
+            <td class="win">낮음 — 유형별 최적화로 불필요 폴더 제거</td>
+          </tr>
+          <tr>
+            <td>문서 귀속 판단</td>
+            <td class="lose">단순하나 모호한 경우 많음</td>
+            <td class="win">카테고리가 구체적 → 판단 명확</td>
+          </tr>
+          <tr>
+            <td>이관 작업 난이도</td>
+            <td class="win">낮음</td>
+            <td>중간 — 유형 판단 선행 필요</td>
+          </tr>
+          <tr>
+            <td>장기 유지 가능성</td>
+            <td class="lose">형식화 위험, Z.공통참조에 집중 부작용</td>
+            <td class="win">실제 업무 흐름과 맞아 유지 가능성 높음</td>
+          </tr>
+          <tr>
+            <td>신규 S/W 추가</td>
+            <td class="win">즉시 동일 구조 적용</td>
+            <td>유형 분류 후 해당 템플릿 적용</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 5 : 사용자 관점
+  ═══════════════════════════════════════════ -->
+  <div class="section" id="section-user">
+    <div class="section-header">
+      <h2>사용자 관점</h2>
+      <p>업로드 작업자와 문서를 찾는 제3자, 두 사용자 모두의 편의가 핵심</p>
+    </div>
+
+    <div class="persona-row">
+      <div class="persona-card">
+        <div class="persona-header" style="background:var(--accent-light);color:var(--accent)">
+          업로드 작업자 관점
+          <span style="font-size:11px;font-weight:400;margin-left:auto;opacity:0.7">어디에 올려야 하지?</span>
+        </div>
+        <div class="persona-body">
+          <div class="persona-point">
+            <span class="icon">⚠</span>
+            <div>
+              <div style="font-weight:600;font-size:12px;margin-bottom:2px">현재 Pain Point</div>
+              <div style="font-size:11px;color:var(--text2)">폴더 구조가 명확하지 않아 어디에 올려야 할지 모름 → 개인 PC에 방치 또는 임의 폴더에 업로드</div>
+            </div>
+          </div>
+          <div class="persona-point">
+            <span class="icon" style="color:var(--green)">✓</span>
+            <div>
+              <div style="font-weight:600;font-size:12px;color:var(--green);margin-bottom:2px">개선 방향</div>
+              <div style="font-size:11px;color:var(--text2)">3가지 질문 기반 분류 기준표 제공. "이 문서는 어떤 S/W / 어떤 단계 / 어떤 성격인가?" → 즉시 폴더 결정 가능</div>
+            </div>
+          </div>
+          <div class="persona-point">
+            <span class="icon" style="color:var(--teal)">→</span>
+            <div>
+              <div style="font-size:11px;color:var(--text2)">파일명 규칙 준수 시 시스템이 귀속 폴더를 자동 안내하는 방향 (시스템 개선 요청사항)</div>
+            </div>
+          </div>
+          <div style="background:var(--surface2);border-radius:8px;padding:10px 12px;margin-top:10px;font-size:11px">
+            <div style="font-weight:600;margin-bottom:6px">업로드 동기 설계 포인트</div>
+            <div style="color:var(--text2);line-height:1.7">
+              · 원인 진단 선행 (인터뷰/설문)<br>
+              · 문화적 저항: TDC 문서 링크 공유를 회의 표준으로<br>
+              · UX 불편: 시스템 개선 요청으로 별도 정리
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="persona-card">
+        <div class="persona-header" style="background:var(--green-light);color:var(--green)">
+          문서 검색자 (제3자) 관점
+          <span style="font-size:11px;font-weight:400;margin-left:auto;opacity:0.7">어디에 있지?</span>
+        </div>
+        <div class="persona-body">
+          <div class="persona-point">
+            <span class="icon">⚠</span>
+            <div>
+              <div style="font-weight:600;font-size:12px;margin-bottom:2px">현재 Pain Point</div>
+              <div style="font-size:11px;color:var(--text2)">어떤 부서 폴더에 있는지 알 수 없음. 동일 S/W 관련 문서가 여러 부서에 분산. 부서 경계를 넘는 탐색 불가</div>
+            </div>
+          </div>
+          <div class="persona-point">
+            <span class="icon" style="color:var(--green)">✓</span>
+            <div>
+              <div style="font-weight:600;font-size:12px;color:var(--green);margin-bottom:2px">개선 방향</div>
+              <div style="font-size:11px;color:var(--text2)">S/W 중심 구조로 "S/W명 → 업무단계" 순으로 탐색. 예측 가능한 위치에서 문서 발견 가능. Z.공통참조가 접점 문서 단일 착지점 역할</div>
+            </div>
+          </div>
+          <div class="persona-point">
+            <span class="icon" style="color:var(--teal)">→</span>
+            <div>
+              <div style="font-size:11px;color:var(--text2)">파일명에 S/W약어·단계·성격 포함 → 검색어 입력만으로도 문서 탐색 가능</div>
+            </div>
+          </div>
+          <div style="background:var(--surface2);border-radius:8px;padding:10px 12px;margin-top:10px;font-size:11px">
+            <div style="font-weight:600;margin-bottom:6px">탐색 시나리오 (개선 후)</div>
+            <div style="color:var(--text2);line-height:1.7">
+              신입사원: BridgePlanner → A.기획·조사 (2클릭)<br>
+              팀장: WayDraw → E.운영·배포·매뉴얼 (2클릭)<br>
+              타부서: 천지인 → Z.공통참조 (2클릭)
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">이관 기준표 — 3가지 질문 판단 흐름</div>
+      <div class="flow-row">
+        <div class="flow-step" style="background:var(--accent-light);border-color:var(--accent)">
+          <div class="step-num" style="color:var(--accent)">질문 1</div>
+          <div class="step-title" style="color:var(--accent)">어떤 S/W?</div>
+          <div class="step-sub">Depth 1 탭 결정</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step" style="background:var(--teal-light);border-color:var(--teal)">
+          <div class="step-num" style="color:var(--teal)">질문 2</div>
+          <div class="step-title" style="color:var(--teal)">어떤 업무 단계?</div>
+          <div class="step-sub">Depth 2 카테고리 결정</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step" style="background:var(--purple-light);border-color:var(--purple)">
+          <div class="step-num" style="color:var(--purple)">질문 3</div>
+          <div class="step-title" style="color:var(--purple)">주독자·작성자?</div>
+          <div class="step-sub">양쪽 모두 → Z.공통참조</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step" style="background:var(--green-light);border-color:var(--green)">
+          <div class="step-num" style="color:var(--green)">결과</div>
+          <div class="step-title" style="color:var(--green)">폴더 확정</div>
+          <div class="step-sub">파일명 규칙 적용 후 업로드</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step" style="background:var(--amber-light);border-color:var(--amber)">
+          <div class="step-num" style="color:var(--amber)">판단 불가</div>
+          <div class="step-title" style="color:var(--amber)">임시 보류</div>
+          <div class="step-sub">작성자 확인 후 재분류</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 3 : 폴더 체계 설계
+  ═══════════════════════════════════════════ -->
+  <div class="section" id="section-structure">
+    <div class="section-header">
+      <h2>폴더 체계 설계</h2>
+      <p>4 Depth 구조 내 S/W 중심 분류 원칙 및 작업 순서</p>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:16px">
+      <div class="card">
+        <div class="card-title">Depth 구조 정의</div>
+        <div class="flow-row" style="flex-direction:column;gap:6px">
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--accent);border-radius:8px;color:white">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;opacity:0.7">Depth 0</span>
+            <span style="font-size:13px;font-weight:600">최상단 (회사 고정)</span>
+            <span style="font-size:11px;opacity:0.7;margin-left:auto">TDC / GPD 구분</span>
+          </div>
+          <div style="text-align:center;color:var(--text3);font-size:12px">↓</div>
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--accent-light);border:1px solid var(--accent);border-radius:8px">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text3)">Depth 1</span>
+            <span style="font-size:13px;font-weight:600;color:var(--accent)">탭 (S/W명 또는 도메인)</span>
+            <span style="font-size:11px;color:var(--text3);margin-left:auto">BridgePlanner, 천지인…</span>
+          </div>
+          <div style="text-align:center;color:var(--text3);font-size:12px">↓</div>
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--teal-light);border:1px solid var(--teal);border-radius:8px">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text3)">Depth 2</span>
+            <span style="font-size:13px;font-weight:600;color:var(--teal)">카테고리 (업무 흐름 단계)</span>
+            <span style="font-size:11px;color:var(--text3);margin-left:auto">A.기획·조사 / B.설계 …</span>
+          </div>
+          <div style="text-align:center;color:var(--text3);font-size:12px">↓</div>
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text3)">Depth 3</span>
+            <span style="font-size:13px;font-weight:600">서브카테고리 (세부 분류)</span>
+            <span style="font-size:11px;color:var(--text3);margin-left:auto">A-1. 요건정의 / A-2. 시장조사…</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">3대 설계 원칙</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="padding:14px;background:var(--green-light);border-radius:8px;border-left:3px solid var(--green)">
+            <div style="font-size:12px;font-weight:700;color:var(--green);margin-bottom:4px">원칙 1 — 문서 있을 때만 폴더 생성</div>
+            <div style="font-size:12px;color:var(--text)">공통 뼈대는 가이드, 강제 아님. 해당 S/W에 실제 문서가 없는 카테고리는 생성하지 않음 → 빈 폴더 방지</div>
+          </div>
+          <div style="padding:14px;background:var(--teal-light);border-radius:8px;border-left:3px solid var(--teal)">
+            <div style="font-size:12px;font-weight:700;color:var(--teal);margin-bottom:4px">원칙 2 — 카테고리는 업무 흐름 기준</div>
+            <div style="font-size:12px;color:var(--text)">조직·부서가 아닌 기획→설계→개발→검수→운영의 흐름으로 구성. 엔지니어·개발자가 동일 폴더 내 각 단계에 업로드</div>
+          </div>
+          <div style="padding:14px;background:var(--purple-light);border-radius:8px;border-left:3px solid var(--purple)">
+            <div style="font-size:12px;font-weight:700;color:var(--purple);margin-bottom:4px">원칙 3 — Z. 공통참조 카테고리 고정</div>
+            <div style="font-size:12px;color:var(--text)">모든 S/W 폴더에 Z. 공통참조 고정. 귀속 모호한 접점 문서의 기본 착지점. 허용 문서 유형을 명시적으로 정의</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-title">Z. 공통참조 — 허용 문서 유형 정의</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px">
+        <div style="padding:10px;background:var(--purple-light);border-radius:8px;text-align:center">
+          <div style="font-size:11px;font-weight:700;color:var(--purple);margin-bottom:4px">기능 명세서</div>
+          <div style="font-size:10px;color:var(--text2)">엔지니어 작성<br>개발자 참조</div>
+        </div>
+        <div style="padding:10px;background:var(--purple-light);border-radius:8px;text-align:center">
+          <div style="font-size:11px;font-weight:700;color:var(--purple);margin-bottom:4px">알고리즘 설계서</div>
+          <div style="font-size:10px;color:var(--text2)">로직 공유<br>양쪽 참조</div>
+        </div>
+        <div style="padding:10px;background:var(--purple-light);border-radius:8px;text-align:center">
+          <div style="font-size:11px;font-weight:700;color:var(--purple);margin-bottom:4px">API 정의서</div>
+          <div style="font-size:10px;color:var(--text2)">인터페이스<br>명세</div>
+        </div>
+        <div style="padding:10px;background:var(--purple-light);border-radius:8px;text-align:center">
+          <div style="font-size:11px;font-weight:700;color:var(--purple);margin-bottom:4px">협업 회의록</div>
+          <div style="font-size:10px;color:var(--text2)">엔지니어+개발<br>양팀 참여</div>
+        </div>
+        <div style="padding:10px;background:var(--surface2);border-radius:8px;text-align:center;border:1px dashed var(--border2)">
+          <div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:4px">귀속 불명확</div>
+          <div style="font-size:10px;color:var(--text3)">작성자 확인 후<br>재분류</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">작업 우선순위 로드맵</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px">
+        <div style="border:1px solid var(--border);border-radius:8px;overflow:hidden">
+          <div style="background:var(--accent);color:white;padding:8px 12px;font-size:11px;font-weight:700">STEP 1<br><span style="font-weight:400;opacity:0.8">즉시 착수</span></div>
+          <div style="padding:12px;font-size:12px">
+            <div style="font-weight:600;margin-bottom:6px">폴더 체계 원칙 확정</div>
+            <div style="color:var(--text2)">설계 원칙 3가지 팀 내 합의. 이관의 기준점 마련</div>
+          </div>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:8px;overflow:hidden">
+          <div style="background:var(--teal);color:white;padding:8px 12px;font-size:11px;font-weight:700">STEP 2<br><span style="font-weight:400;opacity:0.8">이관 전 선행</span></div>
+          <div style="padding:12px;font-size:12px">
+            <div style="font-weight:600;margin-bottom:6px">파일명 규칙 수립</div>
+            <div style="color:var(--text2)">S/W약어·단계·성격 포함 규칙 확정</div>
+          </div>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:8px;overflow:hidden">
+          <div style="background:var(--amber);color:white;padding:8px 12px;font-size:11px;font-weight:700">STEP 3<br><span style="font-weight:400;opacity:0.8">이관 도구</span></div>
+          <div style="padding:12px;font-size:12px">
+            <div style="font-weight:600;margin-bottom:6px">이관 기준표 작성</div>
+            <div style="color:var(--text2)">3가지 질문 기반 분류 기준표. 보류 문서 처리 프로세스 포함</div>
+          </div>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:8px;overflow:hidden">
+          <div style="background:#5B3A8C;color:white;padding:8px 12px;font-size:11px;font-weight:700">STEP 4<br><span style="font-weight:400;opacity:0.8">검증</span></div>
+          <div style="padding:12px;font-size:12px">
+            <div style="font-weight:600;margin-bottom:6px">파일럿 재이관 테스트</div>
+            <div style="color:var(--text2)">원칙 적용 시 이슈 재검증. 1개 S/W 우선 적용</div>
+          </div>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:8px;overflow:hidden">
+          <div style="background:var(--text2);color:white;padding:8px 12px;font-size:11px;font-weight:700">STEP 5<br><span style="font-weight:400;opacity:0.8">정착</span></div>
+          <div style="padding:12px;font-size:12px">
+            <div style="font-weight:600;margin-bottom:6px">활용 가이드 작성</div>
+            <div style="color:var(--text2)">분류 기준, 파일명 규칙, 점검 체크리스트 포함</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 8 : 현장 성과품 분류
+  ═══════════════════════════════════════════ -->
+  <div class="section" id="section-fieldresult">
+    <div class="section-header">
+      <h2>현장 성과품 분류 방식 비교</h2>
+      <p>S/W 내 포함 방식(v4) vs 현장 최상단 분리 방식(v5) — 검토 결과</p>
+    </div>
+
+    <!-- 방식 비교 -->
+    <div class="grid-2" style="margin-bottom:16px">
+
+      <div style="border:2px solid var(--border2);border-radius:10px;overflow:hidden">
+        <div style="background:var(--surface2);padding:12px 16px;border-bottom:1px solid var(--border2)">
+          <div style="font-size:11px;font-weight:700;color:var(--text3);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:4px">방법 A — v4 (검토 완료)</div>
+          <div style="font-size:14px;font-weight:600">S/W 탭 내 F. 현장 성과품</div>
+        </div>
+        <div style="padding:14px 16px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;background:var(--surface2);padding:10px;border-radius:6px;margin-bottom:12px;line-height:1.8;color:var(--text)">
+            [구조분야]<br>
+            &nbsp;&nbsp;└─ BridgePlanner<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ A. 기획·조사<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ B~E. 업무단계<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ <span style="color:var(--accent);font-weight:600">F. 현장 적용 성과품</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├─ F-1. 대산-당진<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└─ F-2. 함양-창녕<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ Z. 작업장
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;gap:8px;font-size:12px"><span style="color:var(--green);font-weight:600">✓</span><span>"BridgePlanner가 어느 현장에 쓰였지?" 바로 확인</span></div>
+            <div style="display:flex;gap:8px;font-size:12px"><span style="color:var(--green);font-weight:600">✓</span><span>S/W 개발 이력과 현장 성과품을 한 탭에서 조회</span></div>
+            <div style="display:flex;gap:8px;font-size:12px"><span style="color:var(--red);font-weight:600">✗</span><span>"대산-당진 현장 전체 성과품" 조회 시 6개 S/W 탭을 모두 열어야 함</span></div>
+            <div style="display:flex;gap:8px;font-size:12px"><span style="color:var(--red);font-weight:600">✗</span><span>현장 추가 시 관련된 모든 S/W 탭에 서브카테고리 각각 추가 필요</span></div>
+            <div style="display:flex;gap:8px;font-size:12px"><span style="color:var(--red);font-weight:600">✗</span><span>현장이 많은 S/W(bCMf: 6개 공구)는 F 카테고리만 비대해짐</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="border:2px solid var(--accent);border-radius:10px;overflow:hidden">
+        <div style="background:var(--accent);padding:12px 16px;border-bottom:1px solid var(--accent)">
+          <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.7);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:4px">방법 B — v5 (채택)</div>
+          <div style="font-size:14px;font-weight:600;color:white">최상단 [현장 적용 성과품] 그룹 분리</div>
+        </div>
+        <div style="padding:14px 16px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;background:var(--accent-light);padding:10px;border-radius:6px;margin-bottom:12px;line-height:1.8;color:var(--text)">
+            <span style="color:var(--accent);font-weight:600">[현장 적용 성과품]</span><br>
+            &nbsp;&nbsp;└─ 대산-당진 (1~4공구)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ BridgePlanner<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├─ 설계도·계산서·수량산출서<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└─ ENG도면·시공상세도<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ WayPrimal·WayConfirm<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ bCMf<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ STRANA
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;gap:8px;font-size:12px"><span style="color:var(--green);font-weight:600">✓</span><span>"대산-당진 전체 성과품" 한 폴더에서 일괄 조회</span></div>
+            <div style="display:flex;gap:8px;font-size:12px"><span style="color:var(--green);font-weight:600">✓</span><span>현장 추가 시 이 그룹에만 탭 1개 신설 — 관리 일원화</span></div>
+            <div style="display:flex;gap:8px;font-size:12px"><span style="color:var(--green);font-weight:600">✓</span><span>S/W 탭은 개발 자산에만 집중 — 역할 분리 명확</span></div>
+            <div style="display:flex;gap:8px;font-size:12px"><span style="color:var(--amber);font-weight:600">△</span><span>"BridgePlanner 성과품만" 보려면 현장 그룹 탐색 필요</span></div>
+            <div style="display:flex;gap:8px;font-size:12px"><span style="color:var(--amber);font-weight:600">△</span><span>성과품 정의 범위(설계도만? Raw data 포함?)를 가이드에 명시 필요</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 현장 목록 -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-title">AS-IS에서 확인된 현장 목록 (v5 반영 기준)</div>
+      <table class="comp-table">
+        <thead>
+          <tr><th>현장명 (탭)</th><th>적용 S/W</th><th>성과품 성격</th><th>비고</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>대산-당진 (1~4공구)</td><td>BridgePlanner, WayPrimal·Confirm, bCMf, LifeLine, STRANA</td><td>설계도·계산서·수량 / 현장 운영 Raw data</td><td>가장 많은 S/W 연계</td></tr>
+          <tr><td>인주-염치 (1~2공구)</td><td>BridgePlanner, bCMf</td><td>설계도·현장 운영 데이터</td><td></td></tr>
+          <tr><td>함양-합천·창녕</td><td>TunnelZainer, CCP</td><td>설계도·관제 성과품</td><td></td></tr>
+          <tr><td>계양-강화</td><td>TwinHighway, CCP, TOVA</td><td>시뮬레이션·관제 성과품</td><td>3개 S/W 연계</td></tr>
+          <tr><td>서산-아산</td><td>TwinHighway, CCP</td><td>시뮬레이션·관제 성과품</td><td></td></tr>
+          <tr><td>터널 현장 (제룡·보령·인제·호남고철)</td><td>TunnelZainer</td><td>설계도·계산서·수량산출서</td><td>현장별 개별 관리</td></tr>
+          <tr><td>양평-이천 / 광주-강진</td><td>TunnelZainer</td><td>설계도·수량</td><td></td></tr>
+          <tr><td>원주청-국도42호선</td><td>TOVA</td><td>교차로 개선 시뮬레이션</td><td>하왕드리·광티 교차로</td></tr>
+          <tr><td>울산외곽·안성-용인</td><td>EG-BIM</td><td>BIM 설계 성과품</td><td></td></tr>
+          <tr><td>어천고가</td><td>NodularZainer</td><td>시공사진·성과품</td><td></td></tr>
+          <tr><td>해외 (발틱파판·싱가포르 등)</td><td>NodularZainer</td><td>해외 기술협력 성과품</td><td></td></tr>
+          <tr><td>남해-여수</td><td>TwinHighway</td><td>도로 시뮬레이션</td><td>제안 단계 포함</td></tr>
+          <tr><td>기타 현장 (미확인)</td><td>—</td><td>현장명 확인 후 재분류</td><td class="lose">임시 보류 탭</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 이슈 및 운영 원칙 -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">현장 성과품 분류 시 주요 이슈</div>
+        <div class="issue-item">
+          <div class="issue-num" style="background:var(--red-light);color:var(--red)">1</div>
+          <div>
+            <div class="issue-title">성과품 범위 정의 필요</div>
+            <div class="issue-desc">설계도·계산서·수량산출서만 성과품인지, 회의록·공문·행정서류도 포함인지 기준이 없으면 작업자마다 판단이 달라짐</div>
+          </div>
+        </div>
+        <div class="issue-item">
+          <div class="issue-num" style="background:var(--amber-light);color:var(--amber)">2</div>
+          <div>
+            <div class="issue-title">bCMf Raw data 별도 정의</div>
+            <div class="issue-desc">bCMf의 현장 문서는 설계 성과품이 아닌 공사 중 생산 데이터(일일보고·품질·안전 기록). 다른 S/W 성과품과 성격이 달라 명칭과 관리 기준을 별도로 정의해야 함</div>
+          </div>
+        </div>
+        <div class="issue-item">
+          <div class="issue-num" style="background:var(--amber-light);color:var(--amber)">3</div>
+          <div>
+            <div class="issue-title">현장 추가 기준 필요</div>
+            <div class="issue-desc">신규 현장 발생 시 독립 탭으로 개설할지, 기타 현장으로 임시 보관 후 이동할지 기준이 없으면 탭이 과도하게 증가할 수 있음</div>
+          </div>
+        </div>
+        <div class="issue-item">
+          <div class="issue-num" style="background:var(--accent-light);color:var(--accent)">4</div>
+          <div>
+            <div class="issue-title">현장 단위 통합 조회 니즈</div>
+            <div class="issue-desc">방법 B(현장 최상단 분리)는 현장 단위 성과품 일괄 조회에 최적화되어 있으나, "S/W별 현장 적용 이력"을 보려면 현장 그룹을 순차 탐색해야 하는 반대 구조적 제약 발생</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">현장 성과품 폴더 운영 원칙 (가이드 반영 필요)</div>
+        <div class="guide-block" style="margin-bottom:10px">
+          <div class="gb-title">성과품 정의 기준 (안)</div>
+          <div class="gb-body">설계도·계산서·수량산출서·ENG도면·시공상세도 등 최종 납품 또는 현장 적용된 문서만 해당. 과업 수행 중 생성된 행정 공문·회의록은 제외하고 S/W 탭 내 D.개발·구현 또는 Z.작업장으로 귀속.</div>
+        </div>
+        <div class="guide-block amber" style="margin-bottom:10px">
+          <div class="gb-title">현장 탭 개설 기준 (안)</div>
+          <div class="gb-body">2개 이상 S/W가 적용된 현장은 독립 탭으로 개설. 1개 S/W만 적용된 소규모 현장은 '기타 현장' 탭에 S/W별 서브카테고리로 통합 관리. 현장 완료 후에도 탭 유지(아카이브).</div>
+        </div>
+        <div class="guide-block green">
+          <div class="gb-title">이관 판단 흐름 (현장 성과품)</div>
+          <div class="gb-body">① 문서가 특정 현장의 최종 산출물인가? → Yes: 현장 그룹으로 이관<br>② 개발·기획 과정 문서인가? → Yes: 해당 S/W 탭의 A~E로 이관<br>③ 작업 중인 문서인가? → Yes: Z.작업장으로 임시 배치</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 6 : 운영 가이드 방향
+  ═══════════════════════════════════════════ -->
+  <div class="section" id="section-guide">
+    <div class="section-header">
+      <h2>운영 가이드 방향</h2>
+      <p>이관 완료 후 구조를 유지하기 위한 정착 메커니즘</p>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:16px">
+      <div class="card">
+        <div class="card-title">활용 가이드 필수 포함 항목</div>
+        <div id="checklist">
+          <div class="checklist-item">
+            <div class="check-box checked" onclick="toggleCheck(this)"></div>
+            <div class="check-label">신규 문서 생성 시 폴더 분류 기준 (3가지 질문 기반)</div>
+            <span class="tag" style="background:var(--green-light);color:var(--green)">완성</span>
+          </div>
+          <div class="checklist-item">
+            <div class="check-box checked" onclick="toggleCheck(this)"></div>
+            <div class="check-label">파일명 작성 규칙 및 예시</div>
+            <span class="tag" style="background:var(--green-light);color:var(--green)">완성</span>
+          </div>
+          <div class="checklist-item">
+            <div class="check-box" onclick="toggleCheck(this)"></div>
+            <div class="check-label">Z. 공통참조 허용 문서 유형 정의</div>
+            <span class="tag" style="background:var(--amber-light);color:var(--amber)">진행중</span>
+          </div>
+          <div class="checklist-item">
+            <div class="check-box" onclick="toggleCheck(this)"></div>
+            <div class="check-label">아카이브 기준 명시 (S/W화 예정 전까지 임시 기준)</div>
+            <span class="tag" style="background:var(--amber-light);color:var(--amber)">미착수</span>
+          </div>
+          <div class="checklist-item">
+            <div class="check-box" onclick="toggleCheck(this)"></div>
+            <div class="check-label">분기 점검 체크리스트</div>
+            <span class="tag" style="background:var(--amber-light);color:var(--amber)">미착수</span>
+          </div>
+          <div class="checklist-item">
+            <div class="check-box" onclick="toggleCheck(this)"></div>
+            <div class="check-label">잘못 분류된 문서 발견 시 처리 절차</div>
+            <span class="tag" style="background:var(--amber-light);color:var(--amber)">미착수</span>
+          </div>
+          <div class="checklist-item">
+            <div class="check-box" onclick="toggleCheck(this)"></div>
+            <div class="check-label">S/W 유형 분류표 (전체 S/W 배정)</div>
+            <span class="tag" style="background:var(--amber-light);color:var(--amber)">협의 필요</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="guide-block" style="margin-bottom:12px">
+          <div class="gb-title">신규 문서 생성 시점 개입</div>
+          <div class="gb-body">새 문서를 만들 때 "어떤 S/W의 / 어떤 단계의 / 어떤 성격의 문서인가" 3가지 질문으로 단순화한 분류 기준표를 1장 치트시트로 배포. 폴더 선택의 판단 비용을 최소화.</div>
+        </div>
+        <div class="guide-block amber" style="margin-bottom:12px">
+          <div class="gb-title">분기 점검 루틴</div>
+          <div class="gb-body">분기 1회, 각 팀 담당자가 자기 영역 폴더를 간단히 리뷰. 체크 항목: 미분류 문서 / 중복 문서 / 개인 PC 잔존 문서. 체크리스트 형태로 단순화하여 부담 최소화.</div>
+        </div>
+        <div class="guide-block green">
+          <div class="gb-title">위반 시 안내 방식 (처벌보다 제안)</div>
+          <div class="gb-body">잘못 분류된 문서 발견 시 삭제·지적 대신 "이 문서는 OO 폴더가 더 적합합니다" 형태의 이동 제안. 문화적 저항을 줄이고 자발적 참여 유도.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">분기 점검 체크리스트 (초안)</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div>
+          <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:10px">폴더 구조 점검</div>
+          <div style="font-size:12px;display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;gap:8px;align-items:center"><span style="width:14px;height:14px;border:1.5px solid var(--border2);border-radius:3px;flex-shrink:0"></span>빈 폴더가 생성되어 있지 않은가</div>
+            <div style="display:flex;gap:8px;align-items:center"><span style="width:14px;height:14px;border:1.5px solid var(--border2);border-radius:3px;flex-shrink:0"></span>파일명 규칙을 준수하지 않은 문서가 있는가</div>
+            <div style="display:flex;gap:8px;align-items:center"><span style="width:14px;height:14px;border:1.5px solid var(--border2);border-radius:3px;flex-shrink:0"></span>동일 문서가 2개 이상 폴더에 중복 존재하는가</div>
+            <div style="display:flex;gap:8px;align-items:center"><span style="width:14px;height:14px;border:1.5px solid var(--border2);border-radius:3px;flex-shrink:0"></span>Z.공통참조에 정의 범위 외 문서가 있는가</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:10px">업로드 현황 점검</div>
+          <div style="font-size:12px;display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;gap:8px;align-items:center"><span style="width:14px;height:14px;border:1.5px solid var(--border2);border-radius:3px;flex-shrink:0"></span>해당 분기 신규 문서가 TDC에 업로드되었는가</div>
+            <div style="display:flex;gap:8px;align-items:center"><span style="width:14px;height:14px;border:1.5px solid var(--border2);border-radius:3px;flex-shrink:0"></span>개인 PC에만 존재하는 공유 필요 문서가 있는가</div>
+            <div style="display:flex;gap:8px;align-items:center"><span style="width:14px;height:14px;border:1.5px solid var(--border2);border-radius:3px;flex-shrink:0"></span>분류 불명확 문서(보류 폴더)가 처리되었는가</div>
+            <div style="display:flex;gap:8px;align-items:center"><span style="width:14px;height:14px;border:1.5px solid var(--border2);border-radius:3px;flex-shrink:0"></span>아카이브 대상 문서가 적절히 구분되어 있는가</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="divider"></div>
+    <div class="section-header" style="margin-top:24px">
+      <h2 style="font-size:14px">운영 지침 세부 내용</h2>
+      <p>실제 문서관리시스템 운영을 위한 구체적 지침</p>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:16px">
+      <div class="card">
+        <div class="card-title">파일명 작성 규칙 (전사 공통)</div>
+        <div style="background:var(--surface2);border-radius:8px;padding:12px 14px;font-family:'IBM Plex Mono',monospace;font-size:12px;margin-bottom:12px;line-height:2">
+          <span style="color:var(--accent);font-weight:700">[S/W약어]</span>_<span style="color:var(--teal);font-weight:700">[단계]</span>_<span style="color:var(--amber);font-weight:700">[문서성격]</span>_<span style="color:var(--text2)">V00_YYYYMMDD</span>
+        </div>
+        <table class="comp-table" style="font-size:11px;margin-bottom:10px">
+          <thead><tr><th>구성요소</th><th>내용</th><th>예시</th></tr></thead>
+          <tbody>
+            <tr><td>S/W약어</td><td>S/W명 2~4자 약어</td><td>BP, WD, GIS, STR</td></tr>
+            <tr><td>단계</td><td>A.기획 / B.설계 / C.명세 / D.개발 / E.검수 / Z.작업</td><td>기획, 설계, 개발</td></tr>
+            <tr><td>문서성격</td><td>문서 유형 한글 명칭</td><td>알고리즘설계서, UI기획서</td></tr>
+            <tr><td>버전</td><td>V + 두자리 숫자</td><td>V01, V02</td></tr>
+            <tr><td>날짜</td><td>YYYYMMDD</td><td>20260311</td></tr>
+          </tbody>
+        </table>
+        <div style="padding:8px 12px;background:var(--amber-light);border-radius:6px;font-size:11px;color:var(--amber)">
+          ⚠ 현장 성과품의 경우: <span style="font-family:'IBM Plex Mono',monospace">[현장약어]_[S/W약어]_[문서성격]_V00</span><br>예: 대당_BP_설계도_V01, 함양_TN_수량산출서_V02
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">폴더 귀속 판단 흐름 (이관 기준표)</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;gap:10px;padding:8px 12px;background:var(--accent-light);border-radius:6px;font-size:12px">
+            <span style="color:var(--accent);font-weight:700;flex-shrink:0">Q1</span>
+            <span>이 문서는 어떤 <strong>S/W</strong>에 관한 문서인가? → Depth 1 탭 결정</span>
+          </div>
+          <div style="text-align:center;color:var(--text3);font-size:12px">↓</div>
+          <div style="display:flex;gap:10px;padding:8px 12px;background:var(--teal-light);border-radius:6px;font-size:12px">
+            <span style="color:var(--teal);font-weight:700;flex-shrink:0">Q2</span>
+            <span>이 문서는 어떤 <strong>업무 단계</strong>에서 생성된 문서인가? → Depth 2 카테고리 결정</span>
+          </div>
+          <div style="text-align:center;color:var(--text3);font-size:12px">↓</div>
+          <div style="display:flex;gap:10px;padding:8px 12px;background:var(--purple-light);border-radius:6px;font-size:12px">
+            <span style="color:var(--purple);font-weight:700;flex-shrink:0">Q3</span>
+            <span>주요 <strong>독자</strong>와 <strong>작성자</strong>가 양쪽 모두인가? → Yes: C-3 기능명세서로 귀속</span>
+          </div>
+          <div style="text-align:center;color:var(--text3);font-size:12px">↓</div>
+          <div style="display:flex;gap:10px;padding:8px 12px;background:var(--green-light);border-radius:6px;font-size:12px">
+            <span style="color:var(--green);font-weight:700;flex-shrink:0">Q4</span>
+            <span>특정 <strong>현장의 최종 산출물</strong>인가? → Yes: [현장 적용 성과품] 그룹으로</span>
+          </div>
+          <div style="text-align:center;color:var(--text3);font-size:12px">↓</div>
+          <div style="display:flex;gap:10px;padding:8px 12px;background:var(--amber-light);border-radius:6px;font-size:12px">
+            <span style="color:var(--amber);font-weight:700;flex-shrink:0">보류</span>
+            <span>판단 불가한 경우 → Z.작업장 임시 배치 후 작성자 확인</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:16px">
+      <div class="card">
+        <div class="card-title">Z. 작업장 운영 지침</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="padding:10px;background:var(--surface2);border-radius:6px;font-size:12px">
+            <strong>목적</strong><br>
+            <span style="color:var(--text2)">작업 중인 문서를 팀별로 임시 보관하는 공간. 완료 문서는 반드시 A~E 해당 폴더로 이동.</span>
+          </div>
+          <div style="padding:10px;background:var(--surface2);border-radius:6px;font-size:12px">
+            <strong>구성</strong><br>
+            <span style="color:var(--text2)">Z-1. 엔지니어링팀 작업장 / Z-2. 개발팀 작업장 / Z-3. 디자인팀 작업장</span>
+          </div>
+          <div style="padding:10px;background:var(--red-light);border-radius:6px;font-size:12px">
+            <strong style="color:var(--red)">금지 사항</strong><br>
+            <span style="color:var(--text2)">완료된 문서를 Z.작업장에 방치하는 행위. Z.작업장이 영구 보관소가 되면 기존 문제가 반복됨. 분기 점검 시 Z.작업장 잔여 문서 처리 필수.</span>
+          </div>
+          <div style="padding:10px;background:var(--green-light);border-radius:6px;font-size:12px">
+            <strong style="color:var(--green)">이동 기준</strong><br>
+            <span style="color:var(--text2)">검토·승인 완료된 문서, 회의에서 공유된 문서, 팀 내 확정된 문서는 즉시 해당 카테고리로 이동.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">아카이브 기준 (임시)</div>
+        <div style="font-size:12px;color:var(--text2);margin-bottom:12px">아카이브 전용 S/W 구축 전까지 아래 기준으로 임시 운영합니다.</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="padding:10px;background:var(--surface2);border-radius:6px;font-size:12px">
+            <strong>아카이브 대상</strong><br>
+            <span style="color:var(--text2)">S/W 서비스 종료 또는 대규모 버전 변경으로 더 이상 활성 참조되지 않는 문서. 프로젝트 완료 후 3년 이상 미조회 문서.</span>
+          </div>
+          <div style="padding:10px;background:var(--surface2);border-radius:6px;font-size:12px">
+            <strong>현행 처리 방식</strong><br>
+            <span style="color:var(--text2)">각 카테고리 내에 유지하되 파일명에 [ARCHIVE] 태그 추가 또는 서브카테고리 최하단 배치. 삭제는 담당팀 확인 후에만 가능.</span>
+          </div>
+          <div style="padding:10px;background:var(--accent-light);border-radius:6px;font-size:12px;color:var(--accent)">
+            <strong>향후 계획</strong><br>
+            아카이브 전용 S/W 구축 완료 시 이 기준을 전면 갱신. 해당 시점까지 이 임시 기준을 준용.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION NEW : 향후 진행 방향
+  ═══════════════════════════════════════════ -->
+  <div class="section" id="section-nextstep">
+    <div class="section-header">
+      <h2>향후 진행 방향</h2>
+      <p>현재 완료된 구조 설계를 바탕으로 실제 이관·정착까지의 단계별 실행 계획</p>
+    </div>
+
+    <!-- 전체 로드맵 -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-title">단계별 실행 로드맵</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px">
+        <div style="border:1px solid var(--accent);border-radius:8px;overflow:hidden">
+          <div style="background:var(--accent);color:white;padding:8px 12px;font-size:11px;font-weight:700">STEP 6<br><span style="font-weight:400;opacity:0.8">다음 단계</span></div>
+          <div style="padding:12px;font-size:12px">
+            <div style="font-weight:600;margin-bottom:6px;color:var(--accent)">담당팀 인터뷰</div>
+            <div style="color:var(--text2);font-size:11px;line-height:1.6">유형 미확정 S/W 담당자 확인 · 현장 성과품 범위 협의 · 폴더 구조 적정성 검토</div>
+          </div>
+        </div>
+        <div style="border:1px solid var(--teal);border-radius:8px;overflow:hidden">
+          <div style="background:var(--teal);color:white;padding:8px 12px;font-size:11px;font-weight:700">STEP 7<br><span style="font-weight:400;opacity:0.8">이관 전 준비</span></div>
+          <div style="padding:12px;font-size:12px">
+            <div style="font-weight:600;margin-bottom:6px;color:var(--teal)">파일명 규칙 확정·배포</div>
+            <div style="color:var(--text2);font-size:11px;line-height:1.6">규칙 확정 후 치트시트 제작 · 이관 기준표 완성 · 기존 파일명 일괄 수정 방안 검토</div>
+          </div>
+        </div>
+        <div style="border:1px solid var(--purple);border-radius:8px;overflow:hidden">
+          <div style="background:var(--purple);color:white;padding:8px 12px;font-size:11px;font-weight:700">STEP 8<br><span style="font-weight:400;opacity:0.8">파일럿 적용</span></div>
+          <div style="padding:12px;font-size:12px">
+            <div style="font-weight:600;margin-bottom:6px;color:var(--purple)">파일럿 S/W 선정·이관</div>
+            <div style="color:var(--text2);font-size:11px;line-height:1.6">1~2개 S/W 우선 적용 · 실제 이관 시 추가 이슈 발굴 · 구조 보완 후 확정</div>
+          </div>
+        </div>
+        <div style="border:1px solid var(--amber);border-radius:8px;overflow:hidden">
+          <div style="background:var(--amber);color:white;padding:8px 12px;font-size:11px;font-weight:700">STEP 9<br><span style="font-weight:400;opacity:0.8">가이드 배포</span></div>
+          <div style="padding:12px;font-size:12px">
+            <div style="font-weight:600;margin-bottom:6px;color:var(--amber)">활용 가이드 배포</div>
+            <div style="color:var(--text2);font-size:11px;line-height:1.6">전사 공통 파일명 규칙 · 분류 기준표 · 분기 점검 체크리스트 배포</div>
+          </div>
+        </div>
+        <div style="border:1px solid var(--border2);border-radius:8px;overflow:hidden">
+          <div style="background:var(--text2);color:white;padding:8px 12px;font-size:11px;font-weight:700">STEP 10<br><span style="font-weight:400;opacity:0.8">전사 확대</span></div>
+          <div style="padding:12px;font-size:12px">
+            <div style="font-weight:600;margin-bottom:6px">전부서 이관 &amp; 정착</div>
+            <div style="color:var(--text2);font-size:11px;line-height:1.6">전 S/W 이관 완료 · 운영 루틴 정착 · 분기 점검 개시</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 6 상세: 담당팀 인터뷰 -->
+    <div class="grid-2" style="margin-bottom:16px">
+      <div class="card">
+        <div class="card-title">STEP 6 — 담당팀 인터뷰 상세 계획</div>
+        <div style="margin-bottom:12px;padding:10px;background:var(--accent-light);border-radius:6px;font-size:12px;color:var(--accent)">
+          <strong>목적:</strong> 경영기획팀 단독 판단이 아닌, 실제 문서를 생성·사용하는 엔지니어·개발자 관점에서 폴더 구조의 적정성을 검증
+        </div>
+        <div class="issue-item">
+          <div class="issue-num" style="background:var(--accent-light);color:var(--accent)">①</div>
+          <div>
+            <div class="issue-title">엔지니어링 기획팀 인터뷰</div>
+            <div class="issue-desc">각 S/W 기획자에게 "어떤 문서를 가장 자주 찾는지", "현재 어디에 올려야 할지 모르는 문서가 있는지" 확인. A~E 카테고리 명칭이 실무에서 직관적으로 이해되는지 검증. 현장 성과품 정의 범위 협의.</div>
+          </div>
+        </div>
+        <div class="issue-item">
+          <div class="issue-num" style="background:var(--teal-light);color:var(--teal)">②</div>
+          <div>
+            <div class="issue-title">개발팀 인터뷰</div>
+            <div class="issue-desc">개발 문서(기능명세서·API정의서·개발계획서)가 C-3에 귀속되는 것이 적합한지 확인. Z.작업장의 팀별 서브카테고리 구성이 실제 업무 흐름과 맞는지 검증. 유형 미확정 S/W(EG-BIM, TwinHighway 등) 최종 확정.</div>
+          </div>
+        </div>
+        <div class="issue-item">
+          <div class="issue-num" style="background:var(--purple-light);color:var(--purple)">③</div>
+          <div>
+            <div class="issue-title">현장 적용 성과품 범위 협의</div>
+            <div class="issue-desc">현장 폴더에 들어갈 문서 유형 정의: 설계도·계산서·수량산출서 등 최종 납품 문서 vs 과업 수행 행정 문서. bCMf Raw data(일일보고·품질·안전 기록) 별도 관리 기준 합의.</div>
+          </div>
+        </div>
+        <div class="issue-item">
+          <div class="issue-num" style="background:var(--amber-light);color:var(--amber)">④</div>
+          <div>
+            <div class="issue-title">미확정 탭 귀속 확인</div>
+            <div class="issue-desc">Construction Control(1,081개), 시공상세도(177개), 기술기획(467개), AI기획(418개) 등 대용량 탭의 TDC 재정비 포함 여부 및 귀속 방향을 각 담당팀과 확정.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">STEP 7 — 파일명 규칙 확정 및 일괄 수정 검토</div>
+        <div style="margin-bottom:12px;padding:10px;background:var(--teal-light);border-radius:6px;font-size:12px;color:var(--teal)">
+          <strong>핵심 원칙:</strong> 파일명 규칙은 이관 전에 반드시 선행 확정. 규칙 없이 이관하면 이관 후에도 귀속 판단 불가 문서가 지속 발생
+        </div>
+        <div style="background:var(--surface2);border-radius:8px;padding:12px 14px;font-family:'IBM Plex Mono',monospace;font-size:12px;margin-bottom:12px;line-height:2">
+          <span style="color:var(--accent);font-weight:700">[S/W약어]</span>_<span style="color:var(--teal);font-weight:700">[단계]</span>_<span style="color:var(--amber);font-weight:700">[문서성격]</span>_<span style="color:var(--text2)">V00_YYYYMMDD</span><br>
+          <span style="color:var(--text3);font-size:11px">예: BP_설계_알고리즘설계서_V01_20260311</span><br>
+          <span style="color:var(--text3);font-size:11px">예: WD_기획_UI기획서_V02_20260315</span><br>
+          <span style="color:var(--text3);font-size:11px">예: GIS_개발_기능요건정의서_V01_20260301</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="padding:8px 12px;background:var(--red-light);border-radius:6px;font-size:11px">
+            <strong style="color:var(--red)">기존 파일명 일괄 수정 검토 필요</strong><br>
+            <span style="color:var(--text2)">이관 대상 문서 수가 19,590개로 개별 수정은 현실적으로 불가. 일괄 rename 스크립트 적용 가능 여부를 TDC 시스템 담당 개발팀에 확인 필요. 또는 신규 업로드부터 규칙 적용 + 기존 문서는 점진적 수정 방식 검토.</span>
+          </div>
+          <div style="padding:8px 12px;background:var(--amber-light);border-radius:6px;font-size:11px">
+            <strong style="color:var(--amber)">시스템 자동화 가능 여부 확인</strong><br>
+            <span style="color:var(--text2)">업로드 시 폴더 경로 기반 파일명 자동 태그 기능 구현 가능 여부 검토. 가능하다면 파일럿 S/W 1개에 우선 테스트 후 전사 확대.</span>
+          </div>
+          <div style="padding:8px 12px;background:var(--green-light);border-radius:6px;font-size:11px">
+            <strong style="color:var(--green)">치트시트 제작</strong><br>
+            <span style="color:var(--text2)">1장짜리 분류 기준 치트시트 제작. "이 문서는 어떤 S/W의, 어떤 단계의, 어떤 성격인가?" 3가지 질문으로 폴더를 즉시 결정할 수 있도록 시각화.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 파일럿 S/W 선정 기준 -->
+    <div class="grid-2" style="margin-bottom:16px">
+      <div class="card">
+        <div class="card-title">STEP 8 — 파일럿 S/W 선정 기준 (안)</div>
+        <div style="font-size:12px;color:var(--text2);margin-bottom:12px">다음 조건을 충족하는 S/W를 1~2개 선정하여 우선 이관 테스트를 수행합니다.</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;gap:10px;padding:8px 12px;background:var(--green-light);border-radius:6px;font-size:12px">
+            <span style="color:var(--green);font-weight:700;flex-shrink:0">권장</span>
+            <span>문서 수가 적당하고 (200~500개), 담당팀 협조 가능하며, 유형이 명확한 S/W</span>
+          </div>
+          <div style="display:flex;gap:10px;padding:8px 12px;background:var(--green-light);border-radius:6px;font-size:12px">
+            <span style="color:var(--green);font-weight:700;flex-shrink:0">권장</span>
+            <span>현장 성과품이 포함되어 있어 현장 폴더 구조까지 동시 검증이 가능한 S/W</span>
+          </div>
+          <div style="display:flex;gap:10px;padding:8px 12px;background:var(--green-light);border-radius:6px;font-size:12px">
+            <span style="color:var(--green);font-weight:700;flex-shrink:0">권장</span>
+            <span>엔지니어+개발자 접점 문서가 존재하여 C-3 귀속 원칙 검증이 가능한 S/W</span>
+          </div>
+          <div style="display:flex;gap:10px;padding:8px 12px;background:var(--red-light);border-radius:6px;font-size:12px">
+            <span style="color:var(--red);font-weight:700;flex-shrink:0">지양</span>
+            <span>문서 수가 너무 많거나(5,000개↑), 현장 공구가 많아 복잡도가 높은 S/W는 1차 파일럿에서 제외</span>
+          </div>
+        </div>
+        <div style="margin-top:12px;padding:10px;background:var(--accent-light);border-radius:6px;font-size:11px;color:var(--accent)">
+          <strong>후보 예시:</strong> DRZainer, WayConfirm, KNGIL, GAIA 등 — 최종 선정은 담당팀 인터뷰 후 확정
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">STEP 9–10 — 가이드 배포 및 정착 계획</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="padding:12px;background:var(--surface2);border-radius:8px">
+            <div style="font-size:12px;font-weight:600;margin-bottom:6px">활용 가이드 필수 포함 항목</div>
+            <div style="font-size:11px;color:var(--text2);line-height:1.8">
+              ① 신규 문서 생성 시 폴더 분류 기준 (3가지 질문)<br>
+              ② 파일명 작성 규칙 및 예시<br>
+              ③ 현장 성과품 폴더 귀속 판단 기준<br>
+              ④ Z.작업장 → A~E 이동 시점 및 기준<br>
+              ⑤ 아카이브 기준 (S/W화 예정, 임시 기준 명시)<br>
+              ⑥ 분기 점검 체크리스트<br>
+              ⑦ 잘못 분류된 문서 발견 시 처리 절차
+            </div>
+          </div>
+          <div style="padding:12px;background:var(--green-light);border-radius:8px">
+            <div style="font-size:12px;font-weight:600;color:var(--green);margin-bottom:6px">정착 메커니즘</div>
+            <div style="font-size:11px;color:var(--text2);line-height:1.8">
+              · 신규 문서 업로드 시 폴더 안내 팝업 (시스템 개선 요청)<br>
+              · TDC 링크 공유를 회의 표준으로 정착<br>
+              · 분기 1회 각 팀 담당자가 체크리스트 기반 점검<br>
+              · 위반 문서 발견 시 "OO 폴더가 적합합니다" 안내 방식<br>
+              · 처벌보다 안내 — 문화적 저항 최소화
+            </div>
+          </div>
+          <div style="padding:12px;background:var(--amber-light);border-radius:8px">
+            <div style="font-size:12px;font-weight:600;color:var(--amber);margin-bottom:6px">이관 이후 지속 모니터링</div>
+            <div style="font-size:11px;color:var(--text2);line-height:1.8">
+              · 이관 완료 후 6개월간 집중 모니터링<br>
+              · 빈 폴더 발생·미분류 문서 발생 현황 추적<br>
+              · 신규 S/W 추가 시 유형 판단 → 템플릿 적용 프로세스 표준화
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 리스크 및 전제 조건 -->
+    <div class="card">
+      <div class="card-title">전제 조건 및 리스크 관리</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+        <div style="border-left:3px solid var(--red);padding:10px 14px;background:var(--red-light);border-radius:0 6px 6px 0">
+          <div style="font-size:12px;font-weight:600;color:var(--red);margin-bottom:6px">High Risk</div>
+          <div style="font-size:11px;color:var(--text);line-height:1.7">
+            <strong>임직원 참여 없이는 정착 불가</strong><br>
+            구조를 아무리 잘 짜도 업로드 동기가 설계되지 않으면 "PC 문서 Zero"는 달성되지 않음. 가이드 배포만으로는 부족하며 임직원 교육·문화 형성이 병행되어야 함
+          </div>
+        </div>
+        <div style="border-left:3px solid var(--amber);padding:10px 14px;background:var(--amber-light);border-radius:0 6px 6px 0">
+          <div style="font-size:12px;font-weight:600;color:var(--amber);margin-bottom:6px">Mid Risk</div>
+          <div style="font-size:11px;color:var(--text);line-height:1.7">
+            <strong>파일명 일괄 수정 현실성</strong><br>
+            19,590개 기존 문서의 파일명 일괄 수정은 단기간에 어려움. 신규 업로드 분부터 규칙 적용 + 기존 문서 점진적 수정 방식이 현실적. 시스템 자동화 가능 여부가 핵심 변수
+          </div>
+        </div>
+        <div style="border-left:3px solid var(--accent);padding:10px 14px;background:var(--accent-light);border-radius:0 6px 6px 0">
+          <div style="font-size:12px;font-weight:600;color:var(--accent);margin-bottom:6px">전제 조건</div>
+          <div style="font-size:11px;color:var(--text);line-height:1.7">
+            <strong>담당팀 인터뷰 결과가 구조 확정의 선제 조건</strong><br>
+            현재 JSON v5는 경영기획팀 분석 기반의 초안. 담당팀 인터뷰 없이 전사 이관을 강행하면 현장에서의 저항과 구조 붕괴 위험이 높음. STEP 6 인터뷰 후 최종 확정 필수
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
-    // Tab switching logic
-    function showSection(idx) {
-        document.querySelectorAll('.section').forEach((s, i) => {
-            s.classList.toggle('active', i === idx);
-        });
-        document.querySelectorAll('.tab').forEach((t, i) => {
-            t.classList.toggle('active', i === idx);
-        });
-    }
-
-    // Modal logic
-    function openModal(id) {
-        document.getElementById(id).style.display = "block";
-        document.body.style.overflow = "hidden"; // Prevent background scroll
-    }
-
-    function closeModal(id) {
-        document.getElementById(id).style.display = "none";
-        document.body.style.overflow = "auto";
-    }
-
-    // Close modal when clicking outside
-    window.onclick = function(event) {
-        if (event.target.className === 'modal') {
-            event.target.style.display = "none";
-            document.body.style.overflow = "auto";
-        }
-    }
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('section-' + id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo(0, 0);
+}
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+  const label = el.nextElementSibling;
+  if (label) label.classList.toggle('done');
+}
 </script>
-
 </body>
 </html>
