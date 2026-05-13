@@ -1,0 +1,27 @@
+{
+  "description": "PDF 파일 매니페스트 - assets/pdf/ 폴더의 PDF를 자동으로 검색하여 등록합니다.",
+  "lastUpdated": "2026-05-11 16:35:47",
+  "files": [
+    {
+      "name": "[보고] 문서관리시스템(PM) 정리_TDC_20260506.pdf",
+      "path": "./assets/pdf/[보고] 문서관리시스템(PM) 정리_TDC_20260506.pdf",
+      "category": "reports",
+      "date": "2026-05-06",
+      "size": "515.4 KB"
+    },
+    {
+      "name": "[보고] 문서관리시스템(PM) 정리_TDC_V02_20260507.pdf",
+      "path": "./assets/pdf/[보고] 문서관리시스템(PM) 정리_TDC_V02_20260507.pdf",
+      "category": "reports",
+      "date": "2026-05-08",
+      "size": "142.8 KB"
+    },
+    {
+      "name": "[요약] 문서관리시스템(PM) 정리_TDC_20260311.pdf",
+      "path": "./assets/pdf/[요약] 문서관리시스템(PM) 정리_TDC_20260311.pdf",
+      "category": "reports",
+      "date": "2026-03-11",
+      "size": "265.7 KB"
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "project": {
+    "name": "PM_TDC 대시보드 (보고용)",
+    "version": "0.1.0",
+    "description": "문서관리시스템(TDC) 개선 방안 프로젝트 기록화 및 보고용 대시보드"
+  },
+  "pdf": {
+    "basePath": "./assets/pdf/",
+    "categories": [
+      {
+        "id": "reports",
+        "label": "보고 자료",
+        "description": "임원 보고용 자료",
+        "folder": "reports"
+      },
+      {
+        "id": "analysis",
+        "label": "분석 자료",
+        "description": "현황 분석 및 개선 방안",
+        "folder": "analysis"
+      },
+      {
+        "id": "meetings",
+        "label": "회의록",
+        "description": "프로젝트 관련 회의록",
+        "folder": "meetings"
+      },
+      {
+        "id": "references",
+        "label": "참고 자료",
+        "description": "관련 표준, 가이드라인 등",
+        "folder": "references"
+      }
+    ]
+  },
+  "sections": [
+    {
+      "id": "overview",
+      "label": "프로젝트 개요",
+      "icon": "📋",
+      "enabled": true
+    },
+    {
+      "id": "reports",
+      "label": "보고용 자료",
+      "icon": "📊",
+      "enabled": true
+    },
+    {
+      "id": "documents",
+      "label": "문서 열람",
+      "icon": "📄",
+      "enabled": true
+    },
+    {
+      "id": "archive",
+      "label": "자료 아카이브",
+      "icon": "🗂️",
+      "enabled": true
+    },
+    {
+      "id": "data-connection",
+      "label": "데이터 연결",
+      "icon": "🔗",
+      "enabled": false,
+      "note": "Google Sheet 연동 (추후 활성화)"
+    }
+  ],
+  "googleSheet": {
+    "enabled": false,
+    "sheetId": "",
+    "apiKey": "",
+    "note": "추후 필요시 설정"
+  }
+}
